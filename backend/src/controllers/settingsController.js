@@ -10,15 +10,18 @@ const EDITABLE_FIELDS = [
   'contactEmail',
   'contactPhone',
   'siteTagline',
+  'clientUrl',
+  'currency',
 ];
 
-/** Public: the handful of settings safe to show on the site itself (footer, help page). */
+/** Public: safe operational settings for footer, help page, and currency */
 const getPublicSettings = asyncHandler(async (req, res) => {
   const settings = await getSettings();
   return success(res, 200, 'Settings fetched.', {
     contactEmail: settings.contactEmail,
     contactPhone: settings.contactPhone,
     siteTagline: settings.siteTagline,
+    currency: settings.currency || 'KES',
   });
 });
 
@@ -57,7 +60,7 @@ const adminUpdateSettings = asyncHandler(async (req, res) => {
   await settings.save();
   invalidate();
 
-  return success(res, 200, 'Settings updated.', settings);
+  return success(res, 200, 'Settings updated successfully.', settings);
 });
 
 module.exports = { getPublicSettings, adminGetSettings, adminUpdateSettings };

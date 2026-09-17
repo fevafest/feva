@@ -24,6 +24,9 @@ export interface AdminDashboardStats {
   pendingOrders: number;
   recentOrders: AdminRecentOrder[];
   revenueByDay: { date: string; revenue: number }[];
+  pendingCommissionTotal?: number;
+  pendingCommissionCount?: number;
+  totalAffiliates?: number;
 }
 
 @Injectable({ providedIn: 'root' })

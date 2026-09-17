@@ -84,7 +84,7 @@ export class AdminSettingsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.savingPlatform.set(false);
-          this.notify.success('Platform settings updated.');
+          this.notify.success('Platform settings updated successfully.');
         },
         error: (err) => {
           this.savingPlatform.set(false);

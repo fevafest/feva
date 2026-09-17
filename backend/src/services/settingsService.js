@@ -1,11 +1,5 @@
 const Settings = require('../models/Settings');
 
-/**
- * Settings are read on nearly every order/checkout request, so they're
- * cached in memory for a short window rather than hitting MongoDB every
- * time. invalidate() is called right after an admin saves a change so the
- * new values take effect immediately rather than waiting out the cache.
- */
 const CACHE_TTL_MS = 30_000;
 let cached = null;
 let cachedAt = 0;
@@ -22,6 +16,10 @@ async function getSettings() {
       affiliateDefaultCommissionPercent: parseFloat(
         process.env.AFFILIATE_DEFAULT_COMMISSION_PERCENT || '10'
       ),
+      contactEmail: process.env.CONTACT_EMAIL || 'support@fevafest.co.ke',
+      contactPhone: process.env.CONTACT_PHONE || '+254700000000',
+      clientUrl: process.env.CLIENT_URL || 'http://localhost:4200',
+      currency: 'KES',
     });
   }
 

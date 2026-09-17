@@ -1,11 +1,19 @@
 <div class="dash-header">
   <div>
     <h1>Admin Dashboard</h1>
-    <p>Platform-wide overview of users, events, tickets and revenue.</p>
+    <p>Platform-wide overview of users, events, tickets, revenue, and affiliates.</p>
   </div>
-  <a routerLink="/admin/events/new" class="btn btn-primary">
-    <app-icon name="plus" [size]="16" /> Create Event
-  </a>
+  <div class="dash-actions">
+    <a routerLink="/admin/affiliates" class="btn btn-outline">
+      <app-icon name="megaphone" [size]="16" /> Affiliates
+    </a>
+    <a routerLink="/admin/payouts" class="btn btn-outline">
+      <app-icon name="wallet" [size]="16" /> Payouts
+    </a>
+    <a routerLink="/admin/events/new" class="btn btn-primary">
+      <app-icon name="plus" [size]="16" /> Create Event
+    </a>
+  </div>
 </div>
 
 <app-loading-spinner *ngIf="loading()" />
@@ -47,6 +55,20 @@
         <div class="stat-label">Pending Payments</div>
       </div>
     </div>
+    <a routerLink="/admin/affiliates" class="stat-card card stat-link">
+      <div class="stat-icon info"><app-icon name="megaphone" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.totalAffiliates || 0 }}</div>
+        <div class="stat-label">Affiliates & Promoters</div>
+      </div>
+    </a>
+    <a routerLink="/admin/payouts" class="stat-card card stat-link">
+      <div class="stat-icon purple"><app-icon name="wallet" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ (s.pendingCommissionTotal || 0) | kes }}</div>
+        <div class="stat-label">Commissions ({{ s.pendingCommissionCount || 0 }} pending)</div>
+      </div>
+    </a>
   </div>
 
   <div class="content-grid">

@@ -2,13 +2,14 @@ const User = require('../models/User');
 const Event = require('../models/Event');
 const Order = require('../models/Order');
 const Commission = require('../models/Commission');
+const Affiliate = require('../models/Affiliate');
 
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
 const { normalizeKenyanPhone } = require('../utils/phone');
 
 const dashboardStats = asyncHandler(async (req, res) => {
-  const [totalUsers, totalEvents, publishedEvents, paidOrders, pendingOrders, recentOrders, pendingCommissions] =
+  const [totalUsers, totalEvents, publishedEvents, paidOrders, pendingOrders, recentOrders, pendingCommissions, totalAffiliates] =
     await Promise.all([
       User.countDocuments(),
       Event.countDocuments(),
@@ -21,6 +22,7 @@ const dashboardStats = asyncHandler(async (req, res) => {
         .sort({ createdAt: -1 })
         .limit(8),
       Commission.find({ status: { $in: ['PENDING', 'AVAILABLE'] } }),
+      Affiliate.countDocuments(),
     ]);
 
   const pendingCommissionTotal = pendingCommissions.reduce((sum, c) => sum + c.commissionAmount, 0);
@@ -55,6 +57,7 @@ const dashboardStats = asyncHandler(async (req, res) => {
     revenueByDay,
     pendingCommissionTotal,
     pendingCommissionCount: pendingCommissions.length,
+    totalAffiliates,
   });
 });
 
