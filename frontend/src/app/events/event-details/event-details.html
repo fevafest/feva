@@ -36,20 +36,6 @@
         <h3>About This Event</h3>
         <p class="description">{{ ev.description }}</p>
       </div>
-
-      <div class="content-card card organizer-card">
-        <h3>Organizer</h3>
-        <div class="organizer-row">
-          <div class="organizer-avatar">{{ ev.organizer.businessName.charAt(0) }}</div>
-          <div>
-            <div class="organizer-name">
-              {{ ev.organizer.businessName }}
-              <app-icon *ngIf="ev.organizer.isVerified" name="check-circle" [size]="15" class="verified-icon" />
-            </div>
-            <p *ngIf="ev.organizer.description">{{ ev.organizer.description }}</p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <aside class="ticket-panel">

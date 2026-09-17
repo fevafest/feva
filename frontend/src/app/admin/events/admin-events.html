@@ -25,7 +25,7 @@
     <img [src]="e.posterImage | fileUrl" [alt]="e.title" />
     <div class="event-row-info">
       <h4>{{ e.title }}</h4>
-      <p>{{ e.organizer.businessName }} &middot; {{ e.startDate | date: 'd MMM y' }}</p>
+      <p>{{ e.startDate | date: 'd MMM y' }}</p>
       <span
         class="badge"
         [ngClass]="{
