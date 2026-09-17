@@ -105,7 +105,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   // In production this would be emailed/SMSed. For now we return it so the
   // reset flow is fully testable end-to-end without an email provider.
-  const resetUrl = `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`;
+  const clientUrl = (process.env.CLIENT_URL || 'http://localhost:4200').replace(/\/$/, '');
+  const resetUrl = `${clientUrl}/auth/reset-password/${resetToken}`;
 
   return success(res, 200, 'If an account exists for this email, a reset link has been sent.', {
     ...(process.env.NODE_ENV !== 'production' ? { resetToken, resetUrl } : {}),

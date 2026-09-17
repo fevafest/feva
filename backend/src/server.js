@@ -26,9 +26,36 @@ const app = express();
 connectDB();
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
+
+const configuredClients = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((url) => url.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
+const defaultAllowedOrigins = [
+  'http://localhost:4200',
+  'http://localhost:3000',
+  ...configuredClients,
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+
+      const cleanOrigin = origin.replace(/\/$/, '');
+      const isAllowed =
+        defaultAllowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app') ||
+        process.env.NODE_ENV !== 'production';
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS origin not allowed: ${origin}`));
+      }
+    },
     credentials: true,
   })
 );
