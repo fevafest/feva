@@ -15,6 +15,14 @@
   gap: 24px;
 }
 
+.brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
 .brand {
   font-family: var(--font-display);
   font-size: 1.7rem;
@@ -28,6 +36,71 @@
 }
 .brand-mark-alt {
   color: var(--color-white);
+}
+
+/* Admin-promoted event callout, flashing beside the logo. */
+.promo-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 999px;
+  max-width: 220px;
+  overflow: hidden;
+  animation: promo-flash 1.6s ease-in-out infinite;
+}
+
+/* Hide the desktop ticker on narrower "desktop" widths where the nav is
+   already tight — it reappears once there's genuinely room for it. */
+@media (max-width: 1150px) {
+  .promo-ticker {
+    display: none;
+  }
+}
+.promo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+.promo-text {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes promo-flash {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 rgba(242, 84, 12, 0);
+  }
+  25% {
+    opacity: 0.55;
+  }
+  75% {
+    box-shadow: 0 0 8px rgba(242, 84, 12, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-ticker,
+  .promo-ticker-mobile {
+    animation: none;
+  }
+}
+
+.promo-ticker-mobile {
+  display: none;
 }
 
 .main-nav {
@@ -218,5 +291,32 @@
   }
   .sell-btn {
     display: none;
+  }
+  .promo-ticker-mobile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--color-primary);
+    animation: promo-flash-bg 1.6s ease-in-out infinite;
+
+    .promo-dot {
+      background: var(--color-white);
+    }
+    .promo-text {
+      color: var(--color-white);
+      font-size: 0.74rem;
+    }
+  }
+}
+
+@keyframes promo-flash-bg {
+  0%,
+  50%,
+  100% {
+    background: var(--color-primary);
+  }
+  25% {
+    background: var(--color-primary-dark);
   }
 }

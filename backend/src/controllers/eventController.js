@@ -10,6 +10,7 @@ const listEvents = asyncHandler(async (req, res) => {
     category,
     city,
     featured,
+    promoted,
     page = 1,
     limit = 12,
     sort = 'startDate',
@@ -27,6 +28,7 @@ const listEvents = asyncHandler(async (req, res) => {
   if (category) query.category = category;
   if (city) query.location = { $regex: city, $options: 'i' };
   if (featured === 'true') query.isFeatured = true;
+  if (promoted === 'true') query.isPromoted = true;
 
   const pageNum = Math.max(parseInt(page, 10) || 1, 1);
   const limitNum = Math.min(Math.max(parseInt(limit, 10) || 12, 1), 50);
@@ -156,6 +158,18 @@ const setEventStatus = asyncHandler(async (req, res) => {
   return success(res, 200, `Event status updated to ${status}.`, event);
 });
 
+/** Admin-only: flag/unflag an event for the flashing header promo ticker. */
+const setEventPromoted = asyncHandler(async (req, res) => {
+  const { isPromoted } = req.body;
+  const event = await Event.findById(req.params.id);
+  if (!event) throw new ApiError(404, 'Event not found.');
+
+  event.isPromoted = Boolean(isPromoted);
+  await event.save();
+
+  return success(res, 200, `Event ${event.isPromoted ? 'promoted' : 'unpromoted'}.`, event);
+});
+
 /** Organizer: list events belonging to my organizer profile. */
 const myEvents = asyncHandler(async (req, res) => {
   const organizerId = await resolveOrganizerId(req);
@@ -216,6 +230,7 @@ module.exports = {
   updateEvent,
   deleteEvent,
   setEventStatus,
+  setEventPromoted,
   myEvents,
   adminListEvents,
 };

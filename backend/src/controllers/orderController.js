@@ -4,13 +4,15 @@ const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
 const { generateOrderNumber, generatePaymentReference } = require('../utils/generateReference');
 const { resolveAffiliateByCode } = require('../services/affiliateService');
+const { getSettings } = require('../services/settingsService');
 
-const FEE_PERCENT = parseFloat(process.env.PLATFORM_FEE_PERCENT || '0.05');
-const FEE_FIXED = parseFloat(process.env.PLATFORM_FEE_FIXED || '0');
-
-function computeTotals(items) {
+/** Reads the fee percentage/fixed amount from admin-editable Settings
+ * (falling back to .env defaults the first time it's ever read) so an
+ * admin can change the platform fee from the dashboard without a redeploy. */
+async function computeTotals(items) {
+  const settings = await getSettings();
   const subtotal = items.reduce((sum, i) => sum + i.lineTotal, 0);
-  const fees = Math.round(subtotal * FEE_PERCENT + FEE_FIXED);
+  const fees = Math.round(subtotal * settings.platformFeePercent + settings.platformFeeFixed);
   const total = subtotal + fees;
   return { subtotal, fees, total };
 }
@@ -63,7 +65,7 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 
   const totalQuantity = orderItems.reduce((sum, i) => sum + i.quantity, 0);
-  const { subtotal, fees, total } = computeTotals(orderItems);
+  const { subtotal, fees, total } = await computeTotals(orderItems);
 
   const order = await Order.create({
     orderNumber: generateOrderNumber(),

@@ -51,6 +51,9 @@ const eventSchema = new mongoose.Schema(
       default: 'draft',
     },
     isFeatured: { type: Boolean, default: false },
+    // Distinct from isFeatured — a promoted event gets a flashing ticker
+    // callout next to the FEVA logo in the header, admin-only marketing tool.
+    isPromoted: { type: Boolean, default: false },
     tags: [{ type: String, trim: true }],
     viewCount: { type: Number, default: 0 },
   },

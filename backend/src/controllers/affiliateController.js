@@ -9,10 +9,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
 const { generateAffiliateCode } = require('../utils/generateReference');
 const { resolveAffiliateByCode } = require('../services/affiliateService');
-
-const DEFAULT_COMMISSION_PERCENT = parseFloat(
-  process.env.AFFILIATE_DEFAULT_COMMISSION_PERCENT || '10'
-);
+const { getSettings } = require('../services/settingsService');
 
 /** Registers the current user as an affiliate (pending admin approval). */
 const registerAffiliate = asyncHandler(async (req, res) => {
@@ -35,6 +32,8 @@ const registerAffiliate = asyncHandler(async (req, res) => {
   }
   if (!code) throw new ApiError(500, 'Could not generate a unique affiliate code. Please try again.');
 
+  const settings = await getSettings();
+
   const affiliate = await Affiliate.create({
     user: req.user._id,
     code,
@@ -42,7 +41,7 @@ const registerAffiliate = asyncHandler(async (req, res) => {
     type: type || 'other',
     bio,
     socialLinks: { instagram, tiktok, twitter, website },
-    defaultCommissionPercent: DEFAULT_COMMISSION_PERCENT,
+    defaultCommissionPercent: settings.affiliateDefaultCommissionPercent,
   });
 
   await User.findByIdAndUpdate(req.user._id, { role: 'affiliate', affiliate: affiliate._id });

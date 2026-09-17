@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { SettingsService } from '../../core/services/settings.service';
+import { PublicSettings } from '../../core/models/settings.model';
 
 interface FaqItem {
   question: string;
@@ -14,8 +16,18 @@ interface FaqItem {
   templateUrl: './help.html',
   styleUrl: './help.scss',
 })
-export class HelpComponent {
+export class HelpComponent implements OnInit {
+  private readonly settingsService = inject(SettingsService);
+
   readonly openIndex = signal<number | null>(0);
+  readonly settings = signal<PublicSettings | null>(null);
+
+  ngOnInit(): void {
+    this.settingsService.getPublic().subscribe({
+      next: (res) => this.settings.set(res.data ?? null),
+      error: () => this.settings.set(null),
+    });
+  }
 
   readonly faqs: FaqItem[] = [
     {

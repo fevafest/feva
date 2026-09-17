@@ -36,6 +36,9 @@
         }"
         >{{ e.status.replace('_', ' ') }}</span
       >
+      <span class="badge badge-red promoted-badge" *ngIf="e.isPromoted">
+        <app-icon name="megaphone" [size]="11" /> Promoted
+      </span>
     </div>
     <div class="event-row-actions">
       <button
@@ -47,6 +50,15 @@
       </button>
       <button *ngIf="e.status === 'published'" class="btn btn-outline btn-sm" (click)="unpublish(e)">
         Unpublish
+      </button>
+      <button
+        class="btn btn-sm"
+        [class.btn-primary]="!e.isPromoted"
+        [class.btn-outline]="e.isPromoted"
+        (click)="togglePromoted(e)"
+        title="Flash this event beside the FEVA logo"
+      >
+        {{ e.isPromoted ? 'Unpromote' : 'Promote' }}
       </button>
       <a [routerLink]="['/admin/events', e._id, 'edit']" class="icon-btn" title="Edit">
         <app-icon name="edit" [size]="16" />

@@ -10,6 +10,7 @@ export interface EventQuery {
   category?: string;
   city?: string;
   featured?: boolean;
+  promoted?: boolean;
   page?: number;
   limit?: number;
   sort?: string;
@@ -67,5 +68,9 @@ export class EventService {
 
   setStatus(id: string, status: string): Observable<ApiResponse<FevaEvent>> {
     return this.http.patch<ApiResponse<FevaEvent>>(`${this.baseUrl}/${id}/status`, { status });
+  }
+
+  setPromoted(id: string, isPromoted: boolean): Observable<ApiResponse<FevaEvent>> {
+    return this.http.patch<ApiResponse<FevaEvent>>(`${this.baseUrl}/${id}/promote`, { isPromoted });
   }
 }

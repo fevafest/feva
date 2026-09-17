@@ -22,11 +22,11 @@
     <div class="contact-methods">
       <div class="contact-method">
         <app-icon name="mail" [size]="18" />
-        <span>support&#64;fevafest.co.ke</span>
+        <span>{{ settings()?.contactEmail || 'support@fevafest.co.ke' }}</span>
       </div>
       <div class="contact-method">
         <app-icon name="phone" [size]="18" />
-        <span>+254 700 000 000</span>
+        <span>{{ settings()?.contactPhone || '+254 700 000 000' }}</span>
       </div>
     </div>
   </div>

@@ -1,8 +1,20 @@
 <header class="site-header">
   <div class="container header-inner">
-    <a routerLink="/" class="brand" (click)="closeMenu()">
-      <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
-    </a>
+    <div class="brand-cluster">
+      <a routerLink="/" class="brand" (click)="closeMenu()">
+        <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
+      </a>
+
+      <a
+        *ngIf="activePromoted() as promo"
+        class="promo-ticker desktop-only"
+        [routerLink]="['/events', promo.slug]"
+        [title]="promo.title"
+      >
+        <span class="promo-dot"></span>
+        <span class="promo-text">{{ promo.title }}</span>
+      </a>
+    </div>
 
     <nav class="main-nav" [class.open]="menuOpen()">
       <a routerLink="/events" routerLinkActive="active" (click)="closeMenu()">Events</a>
@@ -48,4 +60,13 @@
       </button>
     </div>
   </div>
+
+  <a
+    *ngIf="activePromoted() as promo"
+    class="promo-ticker-mobile mobile-only"
+    [routerLink]="['/events', promo.slug]"
+  >
+    <span class="promo-dot"></span>
+    <span class="promo-text">{{ promo.title }}</span>
+  </a>
 </header>

@@ -38,6 +38,7 @@ export interface FevaEvent {
   ticketTypes: TicketType[];
   status: EventStatus;
   isFeatured: boolean;
+  isPromoted: boolean;
   tags?: string[];
   minPrice?: number;
   totalAvailable?: number;

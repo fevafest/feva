@@ -26,8 +26,8 @@
 
     <div class="footer-col">
       <h4>Get In Touch</h4>
-      <p>support&#64;fevafest.co.ke</p>
-      <p>+254 700 000 000</p>
+      <p>{{ settings()?.contactEmail || 'support@fevafest.co.ke' }}</p>
+      <p>{{ settings()?.contactPhone || '+254 700 000 000' }}</p>
       <p>Nairobi, Kenya</p>
     </div>
   </div>

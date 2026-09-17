@@ -73,4 +73,14 @@ export class AdminEventsComponent implements OnInit {
       error: (err) => this.notify.error(err.error?.message || 'Could not delete event.'),
     });
   }
+
+  togglePromoted(event: FevaEvent): void {
+    this.eventService.setPromoted(event._id, !event.isPromoted).subscribe({
+      next: () => {
+        this.notify.success(event.isPromoted ? 'Event unpromoted.' : 'Event promoted — it will flash beside the logo.');
+        this.load();
+      },
+      error: (err) => this.notify.error(err.error?.message || 'Could not update event.'),
+    });
+  }
 }

@@ -8,6 +8,7 @@ const {
   updateEvent,
   deleteEvent,
   setEventStatus,
+  setEventPromoted,
   myEvents,
   adminListEvents,
 } = require('../controllers/eventController');
@@ -39,5 +40,6 @@ router.put(
 );
 router.delete('/:id', protect, authorize('organizer', 'admin'), deleteEvent);
 router.patch('/:id/status', protect, authorize('organizer', 'admin'), setEventStatus);
+router.patch('/:id/promote', protect, authorize('admin'), setEventPromoted);
 
 module.exports = router;

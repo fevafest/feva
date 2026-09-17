@@ -308,24 +308,60 @@
   }
 }
 
+@media (max-width: 900px) {
+  .beam-2 {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .hero {
     min-height: auto;
-    padding: 56px 0 110px;
+    padding: 48px 0 96px;
+    /* A gentler, shorter torn edge on mobile so the crowd/skyline don't get
+       awkwardly sliced by a jagged edge tuned for a much taller hero. */
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 97%,
+      92% 98%,
+      80% 96.5%,
+      68% 98.3%,
+      56% 97%,
+      44% 98.5%,
+      32% 96.8%,
+      20% 98%,
+      8% 97%,
+      0 98.5%
+    );
   }
   .hero-tagline {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
+    padding: 0 12px;
+  }
+  .beam-1,
+  .beam-3 {
+    opacity: 0.6;
   }
   .event-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
   .category-strip {
-    margin-top: -46px;
+    margin-top: -40px;
+    gap: 8px;
   }
   .hero-skyline {
-    bottom: 40px;
-    height: 110px;
+    bottom: 34px;
+    height: 90px;
+  }
+  .hero-crowd {
+    height: 44px;
+  }
+  .cta-inner {
+    text-align: center;
+    justify-content: center;
+    padding: 40px 20px;
   }
 }
 
@@ -334,6 +370,16 @@
     grid-template-columns: 1fr 1fr;
   }
   .search-tabs button span {
+    display: none;
+  }
+  .hero {
+    padding: 40px 0 80px;
+  }
+  .search-panel {
+    max-width: 100%;
+  }
+  .beam-1,
+  .beam-3 {
     display: none;
   }
 }
