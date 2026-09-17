@@ -47,6 +47,12 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'FEVA FEST API is running.', timestamp: new Date() });
 });
 
+// The API has no public root page — this just avoids a confusing 404 for
+// anyone (or any uptime monitor) hitting the bare domain instead of /api/*.
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'FEVA FEST API. See /api/health for status.' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/orders', orderRoutes);
