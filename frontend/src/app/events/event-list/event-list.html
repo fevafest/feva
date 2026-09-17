@@ -1,0 +1,59 @@
+<section class="events-header">
+  <div class="container">
+    <h1>Browse Events</h1>
+    <p>Discover concerts, festivals, sports and more happening across Kenya.</p>
+
+    <form class="filter-bar" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+      <div class="search-field">
+        <app-icon name="search" [size]="18" />
+        <input type="text" formControlName="search" placeholder="Search events..." />
+      </div>
+      <div class="search-field">
+        <app-icon name="location" [size]="18" />
+        <input type="text" formControlName="city" placeholder="City" />
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="container">
+  <div class="category-filters">
+    <button class="category-chip" [class.active]="activeCategory() === null" (click)="selectCategory(null)">
+      All
+    </button>
+    <button
+      class="category-chip"
+      *ngFor="let cat of categories"
+      [class.active]="activeCategory() === cat"
+      (click)="selectCategory(cat)"
+    >
+      {{ cat }}
+    </button>
+  </div>
+
+  <app-loading-spinner *ngIf="loading()" label="Loading events..." />
+
+  <app-empty-state
+    *ngIf="!loading() && events().length === 0"
+    title="No events found"
+    message="Try adjusting your search or check back soon for new events."
+  >
+    <app-icon icon name="ticket" [size]="28" />
+  </app-empty-state>
+
+  <div class="event-grid" *ngIf="!loading() && events().length">
+    <app-event-card *ngFor="let event of events()" [event]="event" />
+  </div>
+
+  <div class="pagination" *ngIf="!loading() && totalPages() > 1">
+    <button
+      *ngFor="let p of [].constructor(totalPages()); let i = index"
+      class="page-btn"
+      [class.active]="page() === i + 1"
+      (click)="goToPage(i + 1)"
+    >
+      {{ i + 1 }}
+    </button>
+  </div>
+</section>

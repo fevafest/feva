@@ -1,0 +1,82 @@
+<div class="dash-header">
+  <h1>Ticket Scanner</h1>
+  <p>Scan a ticket QR code at the door to verify and check in attendees.</p>
+</div>
+
+<div class="scanner-layout">
+  <div class="card scanner-card">
+    <div class="video-wrap">
+      <video #videoEl></video>
+      <div class="video-placeholder" *ngIf="!scanning()">
+        <app-icon name="scan" [size]="36" />
+        <p>Camera preview will appear here</p>
+      </div>
+    </div>
+
+    <div class="form-error" *ngIf="cameraError()">{{ cameraError() }}</div>
+
+    <div class="scanner-controls">
+      <button class="btn btn-primary btn-block" *ngIf="!scanning()" (click)="startScanning()">
+        <app-icon name="scan" [size]="16" /> Start Camera Scan
+      </button>
+      <button class="btn btn-outline btn-block" *ngIf="scanning()" (click)="stopScanning()">Stop Scanning</button>
+    </div>
+
+    <div class="manual-lookup">
+      <label class="form-label">Or enter Ticket ID manually</label>
+      <div class="manual-row">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="TKT-XXXXXXXX-000000"
+          [value]="manualTicketId()"
+          (input)="manualTicketId.set($any($event.target).value)"
+        />
+        <button class="btn btn-dark" (click)="lookupManual()">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card result-card" *ngIf="checkingResult()">
+    <p>Verifying ticket...</p>
+  </div>
+
+  <div class="card result-card" *ngIf="!checkingResult() && result() as r">
+    <div class="result-status" [ngClass]="{ valid: r.valid, invalid: !r.valid }">
+      <app-icon [name]="r.valid ? 'check-circle' : 'x-circle'" [size]="30" />
+      <h3 *ngIf="r.valid">Ticket Valid</h3>
+      <h3 *ngIf="!r.valid && r.reason === 'ALREADY_USED'">Ticket Already Used</h3>
+      <h3 *ngIf="!r.valid && r.reason === 'NOT_FOUND'">Invalid Ticket</h3>
+      <h3 *ngIf="!r.valid && r.reason === 'INVALID_SIGNATURE'">Invalid Ticket</h3>
+      <h3 *ngIf="!r.valid && r.reason === 'CANCELLED'">Ticket Cancelled</h3>
+    </div>
+
+    <div class="ticket-details" *ngIf="r.ticket as t">
+      <div class="detail-row">
+        <span>Event</span>
+        <strong>{{ t.event.title }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Ticket Holder</span>
+        <strong>{{ holderName(t) }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Ticket Type</span>
+        <strong>{{ t.ticketTypeName }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Ticket Number</span>
+        <strong>{{ t.ticketId }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Status</span>
+        <strong>{{ t.status }}</strong>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" *ngIf="r.valid" [disabled]="markingUsed()" (click)="markUsed()">
+      {{ markingUsed() ? 'Marking...' : 'Mark as Used' }}
+    </button>
+    <button class="btn btn-outline btn-block" (click)="reset()">Scan Next Ticket</button>
+  </div>
+</div>

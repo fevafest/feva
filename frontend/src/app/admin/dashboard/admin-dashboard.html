@@ -1,0 +1,83 @@
+<div class="dash-header">
+  <h1>Admin Dashboard</h1>
+  <p>Platform-wide overview of users, events, tickets and revenue.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<ng-container *ngIf="!loading() && stats() as s">
+  <div class="stats-grid">
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="users" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.totalUsers }}</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="calendar-event" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.totalEvents }}</div>
+        <div class="stat-label">Total Events ({{ s.publishedEvents }} live)</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="ticket" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.ticketsSold }}</div>
+        <div class="stat-label">Tickets Sold</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="wallet" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.totalRevenue | kes }}</div>
+        <div class="stat-label">Total Revenue</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon warn"><app-icon name="clock" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.pendingOrders }}</div>
+        <div class="stat-label">Pending Payments</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card chart-card">
+      <h3>Revenue (Last 7 Days)</h3>
+      <div class="bar-chart">
+        <div class="bar-col" *ngFor="let d of s.revenueByDay">
+          <div class="bar" [style.height.%]="barHeight(d.revenue)" [title]="d.revenue | kes"></div>
+          <span class="bar-label">{{ d.date | slice: 5 }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card recent-card">
+      <div class="section-head">
+        <h3>Recent Orders</h3>
+        <a routerLink="/admin/orders">See all &rarr;</a>
+      </div>
+      <div class="order-row" *ngFor="let o of s.recentOrders">
+        <div>
+          <div class="order-user">{{ o.user.fullName }}</div>
+          <div class="order-event">{{ o.event.title }}</div>
+        </div>
+        <div class="order-right">
+          <div class="order-amount">{{ o.total | kes }}</div>
+          <span
+            class="badge"
+            [ngClass]="{
+              'badge-green': o.paymentStatus === 'PAID',
+              'badge-amber': o.paymentStatus === 'PENDING' || o.paymentStatus === 'PAYMENT_PENDING',
+              'badge-red': o.paymentStatus === 'FAILED' || o.paymentStatus === 'CANCELLED'
+            }"
+            >{{ o.paymentStatus }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,76 @@
+<div class="checkout-page container" *ngIf="selection">
+  <div class="checkout-layout">
+    <div class="checkout-main">
+      <a [routerLink]="['/events', selection.event.slug]" class="back-link">
+        <app-icon name="arrow-right" [size]="15" class="rotate" /> Back to event
+      </a>
+
+      <h1>Checkout</h1>
+
+      <ng-container *ngIf="step() === 'summary'">
+        <div class="card step-card">
+          <h3>Order Summary</h3>
+          <div class="order-item" *ngFor="let item of selection.items">
+            <span>{{ item.ticketTypeName }} &times; {{ item.quantity }}</span>
+            <span>{{ item.unitPrice * item.quantity | kes }}</span>
+          </div>
+          <div class="order-item total-item">
+            <span>Subtotal</span>
+            <span>{{ subtotal | kes }}</span>
+          </div>
+          <p class="fee-note">A platform processing fee is added at checkout confirmation.</p>
+        </div>
+
+        <div class="card step-card">
+          <h3>Payment Details</h3>
+          <form [formGroup]="phoneForm">
+            <div class="form-group">
+              <label class="form-label">M-Pesa Phone Number</label>
+              <input class="form-control" type="tel" formControlName="phoneNumber" placeholder="0712345678" />
+              <div class="form-error" *ngIf="phoneForm.get('phoneNumber')?.touched && phoneForm.get('phoneNumber')?.invalid">
+                Enter a valid Safaricom/Airtel number, e.g. 0712345678.
+              </div>
+              <div class="form-hint">You will receive an M-Pesa prompt on this number.</div>
+            </div>
+          </form>
+
+          <button class="btn btn-primary btn-block pay-btn" [disabled]="submitting()" (click)="payWithMpesa()">
+            <app-icon name="phone" [size]="18" />
+            {{ submitting() ? 'Processing...' : 'Pay with M-Pesa' }}
+          </button>
+        </div>
+      </ng-container>
+
+      <div class="card step-card status-card" *ngIf="step() === 'awaiting-payment'">
+        <div class="pulse-icon">
+          <app-icon name="phone" [size]="30" />
+        </div>
+        <h3>Check your phone</h3>
+        <p>Enter your M-Pesa PIN to complete payment of <strong>{{ order()?.total | kes }}</strong>.</p>
+        <div class="spinner-inline"></div>
+        <p class="waiting-text">Waiting for confirmation from M-Pesa...</p>
+      </div>
+
+      <div class="card step-card status-card" *ngIf="step() === 'failed'">
+        <div class="icon-circle error">
+          <app-icon name="x-circle" [size]="30" />
+        </div>
+        <h3>Payment Not Completed</h3>
+        <p>{{ failureReason() }}</p>
+        <button class="btn btn-primary" (click)="retry()">Try Again</button>
+      </div>
+    </div>
+
+    <aside class="checkout-side">
+      <div class="card event-summary-card">
+        <img [src]="selection.event.posterImage | fileUrl" [alt]="selection.event.title" />
+        <div class="event-summary-body">
+          <h4>{{ selection.event.title }}</h4>
+          <p>{{ selection.event.venue }}, {{ selection.event.location }}</p>
+          <p>{{ selection.event.startDate | date: 'EEE, d MMM y' }} &middot; {{ selection.event.startTime }}</p>
+          <div class="qty-badge">{{ totalQuantity }} ticket{{ totalQuantity > 1 ? 's' : '' }}</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

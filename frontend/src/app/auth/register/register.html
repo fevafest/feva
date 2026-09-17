@@ -1,0 +1,62 @@
+<div class="auth-page">
+  <div class="auth-card card">
+    <a routerLink="/" class="auth-brand">
+      <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
+    </a>
+
+    <h1>Create your account</h1>
+    <p class="auth-subtitle">Sign up to buy tickets and track your orders.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label class="form-label">Full name</label>
+        <input class="form-control" type="text" formControlName="fullName" placeholder="Jane Wanjiku" />
+        <div class="form-error" *ngIf="form.get('fullName')?.touched && form.get('fullName')?.invalid">
+          Enter your full name.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-control" type="email" formControlName="email" placeholder="you@example.com" />
+        <div class="form-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+          Enter a valid email address.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone number</label>
+        <input class="form-control" type="tel" formControlName="phoneNumber" placeholder="0712345678" />
+        <div class="form-error" *ngIf="form.get('phoneNumber')?.touched && form.get('phoneNumber')?.invalid">
+          Enter a valid Kenyan phone number (e.g. 0712345678).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-field">
+          <input
+            class="form-control"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="At least 6 characters"
+          />
+          <button type="button" class="toggle-pw" (click)="showPassword.set(!showPassword())">
+            <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="18" />
+          </button>
+        </div>
+        <div class="form-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          Password must be at least 6 characters.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading()">
+        {{ loading() ? 'Creating account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <p class="auth-footer-text">
+      Already have an account? <a routerLink="/auth/login">Log in</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="dash-header">
+  <div>
+    <h1>Admins</h1>
+    <p>Manage admin accounts. Only superadmins can create admins or view Payments.</p>
+  </div>
+  <button class="btn btn-primary" (click)="showForm.set(!showForm())">
+    {{ showForm() ? 'Cancel' : '+ New Admin' }}
+  </button>
+</div>
+
+<div class="card form-card" *ngIf="showForm()">
+  <h3>Create Admin Account</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-control" type="text" formControlName="fullName" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" type="email" formControlName="email" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-control" type="tel" formControlName="phoneNumber" placeholder="0712345678" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-control" type="password" formControlName="password" />
+      </div>
+    </div>
+    <label class="checkbox-row">
+      <input type="checkbox" formControlName="isSuperAdmin" />
+      <span>Grant superadmin access (can create admins and view Payments)</span>
+    </label>
+    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+      {{ submitting() ? 'Creating...' : 'Create Admin' }}
+    </button>
+  </form>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<div class="table-card card" *ngIf="!loading() && admins().length">
+  <div class="table-row table-head">
+    <span>Name</span>
+    <span>Email</span>
+    <span>Phone</span>
+    <span>Role</span>
+    <span>Status</span>
+    <span>Action</span>
+  </div>
+  <div class="table-row" *ngFor="let a of admins()">
+    <span>{{ a.fullName }}</span>
+    <span class="sub">{{ a.email }}</span>
+    <span class="sub">{{ a.phoneNumber }}</span>
+    <span>
+      <span class="badge" [ngClass]="a.isSuperAdmin ? 'badge-red' : 'badge-gray'">
+        {{ a.isSuperAdmin ? 'Superadmin' : 'Admin' }}
+      </span>
+    </span>
+    <span>
+      <span class="badge" [ngClass]="a.isActive ? 'badge-green' : 'badge-red'">
+        {{ a.isActive ? 'Active' : 'Deactivated' }}
+      </span>
+    </span>
+    <span>
+      <button class="btn btn-outline btn-sm" (click)="toggleSuperAdmin(a)">
+        {{ a.isSuperAdmin ? 'Revoke Superadmin' : 'Make Superadmin' }}
+      </button>
+    </span>
+  </div>
+</div>

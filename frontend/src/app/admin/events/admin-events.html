@@ -1,0 +1,56 @@
+<div class="dash-header">
+  <div>
+    <h1>Events</h1>
+    <p>Approve, publish and manage every event on the platform.</p>
+  </div>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'pending_approval'" (click)="setFilter('pending_approval')">Pending Approval</button>
+  <button [class.active]="filter() === 'published'" (click)="setFilter('published')">Published</button>
+  <button [class.active]="filter() === 'unpublished'" (click)="setFilter('unpublished')">Unpublished</button>
+  <button [class.active]="filter() === 'draft'" (click)="setFilter('draft')">Draft</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && events().length === 0" title="No events found" />
+
+<div class="events-table" *ngIf="!loading() && events().length">
+  <div class="event-row card" *ngFor="let e of events()">
+    <img [src]="e.posterImage | fileUrl" [alt]="e.title" />
+    <div class="event-row-info">
+      <h4>{{ e.title }}</h4>
+      <p>{{ e.organizer.businessName }} &middot; {{ e.startDate | date: 'd MMM y' }}</p>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': e.status === 'published',
+          'badge-amber': e.status === 'pending_approval',
+          'badge-gray': e.status === 'draft' || e.status === 'unpublished',
+          'badge-red': e.status === 'cancelled'
+        }"
+        >{{ e.status.replace('_', ' ') }}</span
+      >
+    </div>
+    <div class="event-row-actions">
+      <button
+        *ngIf="e.status !== 'published'"
+        class="btn btn-primary btn-sm"
+        (click)="publish(e)"
+      >
+        Publish
+      </button>
+      <button *ngIf="e.status === 'published'" class="btn btn-outline btn-sm" (click)="unpublish(e)">
+        Unpublish
+      </button>
+      <a [routerLink]="['/admin/events', e._id, 'edit']" class="icon-btn" title="Edit">
+        <app-icon name="edit" [size]="16" />
+      </a>
+      <button class="icon-btn danger" title="Delete" (click)="remove(e)">
+        <app-icon name="trash" [size]="16" />
+      </button>
+    </div>
+  </div>
+</div>

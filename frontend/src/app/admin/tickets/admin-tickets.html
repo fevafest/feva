@@ -1,0 +1,56 @@
+<div class="dash-header">
+  <h1>Tickets</h1>
+  <p>Every ticket issued across the platform.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'VALID'" (click)="setFilter('VALID')">Valid</button>
+  <button [class.active]="filter() === 'USED'" (click)="setFilter('USED')">Used</button>
+  <button [class.active]="filter() === 'CANCELLED'" (click)="setFilter('CANCELLED')">Cancelled</button>
+</div>
+
+<div class="search-bar">
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Search by ticket number..."
+    [ngModel]="search()"
+    (ngModelChange)="search.set($event)"
+    (keyup.enter)="load()"
+  />
+  <button class="btn btn-dark" (click)="load()">Search</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && tickets().length === 0" title="No tickets found" />
+
+<div class="table-card card" *ngIf="!loading() && tickets().length">
+  <div class="table-row table-head">
+    <span>Ticket No.</span>
+    <span>Holder</span>
+    <span>Event</span>
+    <span>Type</span>
+    <span>Status</span>
+    <span>Issued</span>
+  </div>
+  <div class="table-row" *ngFor="let t of tickets()">
+    <span class="mono">{{ t.ticketId }}</span>
+    <span>{{ holderName(t) }}</span>
+    <span>{{ t.event.title }}</span>
+    <span>{{ t.ticketTypeName }}</span>
+    <span>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': t.status === 'VALID',
+          'badge-gray': t.status === 'USED',
+          'badge-red': t.status === 'CANCELLED'
+        }"
+        >{{ t.status }}</span
+      >
+    </span>
+    <span class="sub">{{ t.createdAt | date: 'd MMM y' }}</span>
+  </div>
+</div>

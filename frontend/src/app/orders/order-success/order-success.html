@@ -1,0 +1,42 @@
+<app-loading-spinner *ngIf="loading()" label="Loading your order..." />
+
+<div class="success-page container" *ngIf="!loading() && order() as ord">
+  <div class="success-card card" *ngIf="!notPaid()">
+    <div class="success-icon">
+      <app-icon name="check-circle" [size]="40" />
+    </div>
+    <h1>Payment Successful!</h1>
+    <p>Your tickets for <strong>{{ eventTitle(ord) }}</strong> are confirmed.</p>
+
+    <div class="order-details">
+      <div class="detail-row">
+        <span>Order Number</span>
+        <strong>{{ ord.orderNumber }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Quantity</span>
+        <strong>{{ ord.quantity }} ticket{{ ord.quantity > 1 ? 's' : '' }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Amount Paid</span>
+        <strong>{{ ord.total | kes }}</strong>
+      </div>
+    </div>
+
+    <div class="success-actions">
+      <a routerLink="/dashboard/tickets" class="btn btn-primary">View My Tickets</a>
+      <a routerLink="/events" class="btn btn-outline">Browse More Events</a>
+    </div>
+  </div>
+
+  <div class="success-card card" *ngIf="notPaid()">
+    <div class="success-icon pending">
+      <app-icon name="clock" [size]="40" />
+    </div>
+    <h1>Payment Not Yet Confirmed</h1>
+    <p>We haven't received confirmation for this order yet. Check My Orders for the latest status.</p>
+    <div class="success-actions">
+      <a routerLink="/dashboard/orders" class="btn btn-primary">View My Orders</a>
+    </div>
+  </div>
+</div>

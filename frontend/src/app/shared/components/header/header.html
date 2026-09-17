@@ -1,0 +1,51 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a routerLink="/" class="brand" (click)="closeMenu()">
+      <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
+    </a>
+
+    <nav class="main-nav" [class.open]="menuOpen()">
+      <a routerLink="/events" routerLinkActive="active" (click)="closeMenu()">Events</a>
+      <a routerLink="/flights" routerLinkActive="active" (click)="closeMenu()">Flights</a>
+      <a routerLink="/holidays" routerLinkActive="active" (click)="closeMenu()">Holidays</a>
+      <a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a>
+
+      <div class="mobile-only nav-divider"></div>
+
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/auth/login" class="mobile-only" (click)="closeMenu()">Log In</a>
+        <a routerLink="/auth/register" class="mobile-only" (click)="closeMenu()">Sign Up</a>
+      </ng-container>
+      <ng-container *ngIf="auth.isLoggedIn()">
+        <a [routerLink]="dashboardLink()" class="mobile-only" (click)="closeMenu()">Dashboard</a>
+        <a (click)="logout(); closeMenu()" class="mobile-only logout-link">Logout</a>
+      </ng-container>
+    </nav>
+
+    <div class="header-actions">
+      <a routerLink="/help" class="action-link desktop-only">Help</a>
+
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/auth/login" class="action-link desktop-only">Log In</a>
+      </ng-container>
+
+      <div class="account-wrap desktop-only" *ngIf="auth.isLoggedIn()">
+        <button class="account-btn" (click)="toggleAccountMenu()">
+          <span class="avatar-circle">{{ auth.currentUser()?.fullName?.charAt(0) }}</span>
+          <span>{{ auth.currentUser()?.fullName?.split(' ')?.[0] }}</span>
+        </button>
+        <div class="account-dropdown" *ngIf="accountMenuOpen()">
+          <a [routerLink]="dashboardLink()" (click)="toggleAccountMenu()">Dashboard</a>
+          <a routerLink="/dashboard/profile" (click)="toggleAccountMenu()">Profile</a>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </div>
+
+      <a routerLink="/organizer" class="btn btn-primary sell-btn">Sell Your Event</a>
+
+      <button class="hamburger" (click)="toggleMenu()" [class.active]="menuOpen()" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>

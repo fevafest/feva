@@ -1,0 +1,55 @@
+<div class="dash-header">
+  <h1>Users</h1>
+  <p>Manage all registered accounts on FEVA FEST.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="roleFilter() === 'all'" (click)="setRoleFilter('all')">All</button>
+  <button [class.active]="roleFilter() === 'customer'" (click)="setRoleFilter('customer')">Customers</button>
+  <button [class.active]="roleFilter() === 'organizer'" (click)="setRoleFilter('organizer')">Organizers</button>
+  <button [class.active]="roleFilter() === 'admin'" (click)="setRoleFilter('admin')">Admins</button>
+  <button [class.active]="roleFilter() === 'staff'" (click)="setRoleFilter('staff')">Staff</button>
+</div>
+
+<div class="search-bar">
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Search by name or email..."
+    [ngModel]="search()"
+    (ngModelChange)="search.set($event)"
+    (keyup.enter)="load()"
+  />
+  <button class="btn btn-dark" (click)="load()">Search</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && users().length === 0" title="No users found" />
+
+<div class="table-card card" *ngIf="!loading() && users().length">
+  <div class="table-row table-head">
+    <span>Name</span>
+    <span>Email</span>
+    <span>Phone</span>
+    <span>Role</span>
+    <span>Status</span>
+    <span>Action</span>
+  </div>
+  <div class="table-row" *ngFor="let u of users()">
+    <span>{{ u.fullName }}</span>
+    <span class="sub">{{ u.email }}</span>
+    <span class="sub">{{ u.phoneNumber }}</span>
+    <span><span class="badge badge-gray">{{ u.role }}</span></span>
+    <span>
+      <span class="badge" [ngClass]="u.isActive ? 'badge-green' : 'badge-red'">
+        {{ u.isActive ? 'Active' : 'Deactivated' }}
+      </span>
+    </span>
+    <span>
+      <button class="btn btn-outline btn-sm" (click)="toggleActive(u)">
+        {{ u.isActive ? 'Deactivate' : 'Activate' }}
+      </button>
+    </span>
+  </div>
+</div>

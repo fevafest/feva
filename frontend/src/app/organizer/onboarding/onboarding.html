@@ -1,0 +1,60 @@
+<div class="onboarding-page">
+  <div class="onboarding-card card" *ngIf="!submitted()">
+    <div class="icon-wrap"><app-icon name="megaphone" [size]="28" /></div>
+    <h1>Become a FEVA FEST Organizer</h1>
+    <p class="subtitle">Register your business to start creating and selling event tickets.</p>
+
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <p class="login-notice">You need an account to apply as an organizer.</p>
+      <a routerLink="/auth/login" [queryParams]="{ redirect: '/organizer' }" class="btn btn-primary btn-block"
+        >Log In to Continue</a
+      >
+      <a routerLink="/auth/register" class="btn btn-outline btn-block">Create an Account</a>
+    </ng-container>
+
+    <form *ngIf="auth.isLoggedIn()" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label class="form-label">Business / Organization Name</label>
+        <input class="form-control" type="text" formControlName="businessName" placeholder="Amani Events Ltd" />
+        <div class="form-error" *ngIf="form.get('businessName')?.touched && form.get('businessName')?.invalid">
+          Business name is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" rows="3" formControlName="description" placeholder="Tell us about your business"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Contact Email</label>
+          <input class="form-control" type="email" formControlName="contactEmail" placeholder="you@business.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contact Phone</label>
+          <input class="form-control" type="tel" formControlName="contactPhone" placeholder="0712345678" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Website (optional)</label>
+        <input class="form-control" type="text" formControlName="website" placeholder="https://yourbusiness.com" />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+        {{ submitting() ? 'Submitting...' : 'Submit Application' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="onboarding-card card" *ngIf="submitted()">
+    <div class="icon-wrap success"><app-icon name="check-circle" [size]="28" /></div>
+    <h1>Application Submitted</h1>
+    <p class="subtitle">
+      Your organizer profile has been created. An admin will review and approve your account, and
+      any events you create will go live once approved.
+    </p>
+    <a routerLink="/organizer/dashboard" class="btn btn-primary">Go to Organizer Dashboard</a>
+  </div>
+</div>

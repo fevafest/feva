@@ -1,0 +1,92 @@
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <div class="hero-text">
+      <span class="badge badge-red hero-eyebrow">Kenya's Event Marketplace</span>
+      <h1>Find Your Next Unforgettable Experience</h1>
+      <p>Discover concerts, festivals, comedy nights and more &mdash; book tickets in minutes with M-Pesa.</p>
+    </div>
+
+    <div class="search-panel card">
+      <div class="search-tabs">
+        <button [class.active]="activeTab() === 'events'" (click)="setTab('events')">
+          <app-icon name="ticket" [size]="16" /> Events
+        </button>
+        <button [class.active]="activeTab() === 'flights'" (click)="setTab('flights')">
+          <app-icon name="plane" [size]="16" /> Flights
+        </button>
+        <button [class.active]="activeTab() === 'holidays'" (click)="setTab('holidays')">
+          <app-icon name="sun" [size]="16" /> Holidays
+        </button>
+      </div>
+
+      <form
+        class="search-form"
+        *ngIf="activeTab() === 'events'"
+        [formGroup]="searchForm"
+        (ngSubmit)="submitSearch()"
+      >
+        <div class="search-field">
+          <app-icon name="search" [size]="18" />
+          <input type="text" formControlName="search" placeholder="Events name" />
+        </div>
+        <div class="search-field">
+          <app-icon name="location" [size]="18" />
+          <input type="text" formControlName="city" placeholder="City" />
+        </div>
+        <button type="submit" class="btn btn-primary find-btn">Find Your Event</button>
+      </form>
+
+      <div class="search-placeholder" *ngIf="activeTab() === 'flights'">
+        <p>Flight search is launching soon. Meanwhile, explore our upcoming events below.</p>
+        <a routerLink="/flights" class="btn btn-outline btn-sm">Learn More</a>
+      </div>
+      <div class="search-placeholder" *ngIf="activeTab() === 'holidays'">
+        <p>Holiday packages are launching soon. Meanwhile, explore our upcoming events below.</p>
+        <a routerLink="/holidays" class="btn btn-outline btn-sm">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="category-strip container">
+  <button class="category-chip" *ngFor="let cat of categories" (click)="goToCategory(cat)">
+    {{ cat }}
+  </button>
+</section>
+
+<section class="section container" *ngIf="loadingFeatured() || featuredEvents().length">
+  <div class="section-header">
+    <h2 class="section-title">Featured Events</h2>
+    <a routerLink="/events" [queryParams]="{ featured: true }" class="see-all">See all &rarr;</a>
+  </div>
+
+  <app-loading-spinner *ngIf="loadingFeatured()" />
+
+  <div class="event-grid" *ngIf="!loadingFeatured()">
+    <app-event-card *ngFor="let event of featuredEvents()" [event]="event" />
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-header">
+    <h2 class="section-title">Upcoming Events</h2>
+    <a routerLink="/events" class="see-all">See all &rarr;</a>
+  </div>
+
+  <app-loading-spinner *ngIf="loadingUpcoming()" />
+
+  <div class="event-grid" *ngIf="!loadingUpcoming()">
+    <app-event-card *ngFor="let event of upcomingEvents()" [event]="event" />
+  </div>
+</section>
+
+<section class="organizer-cta">
+  <div class="container cta-inner">
+    <div>
+      <h2>Have an event to promote?</h2>
+      <p>List your event on FEVA FEST and reach thousands of buyers across Kenya.</p>
+    </div>
+    <a routerLink="/organizer" class="btn btn-dark">Sell Your Event</a>
+  </div>
+</section>

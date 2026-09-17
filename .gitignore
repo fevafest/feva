@@ -1,0 +1,21 @@
+# Dependencies
+**/node_modules
+
+# Environment
+**/.env
+!**/.env.example
+
+# Build output
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/dist
+frontend/.angular
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,31 @@
+.coming-soon-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(226, 18, 33, 0.1);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+}
+
+p {
+  color: var(--color-gray);
+  max-width: 440px;
+  margin: 0 auto 24px;
+}

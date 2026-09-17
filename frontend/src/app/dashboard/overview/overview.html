@@ -1,0 +1,81 @@
+<div class="dash-header">
+  <h1>Welcome back, {{ auth.currentUser()?.fullName?.split(' ')?.[0] }}</h1>
+  <p>Here's what's happening with your account.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<ng-container *ngIf="!loading() && overview() as ov">
+  <div class="stats-row">
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="ticket" [size]="22" /></div>
+      <div>
+        <div class="stat-value">{{ ov.totalTicketsPurchased }}</div>
+        <div class="stat-label">Total Tickets Purchased</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="calendar-event" [size]="22" /></div>
+      <div>
+        <div class="stat-value">{{ ov.upcomingTickets.length }}</div>
+        <div class="stat-label">Upcoming Events</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="orders" [size]="22" /></div>
+      <div>
+        <div class="stat-value">{{ ov.recentOrders.length }}</div>
+        <div class="stat-label">Recent Orders</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-header">
+      <h2 class="section-title">Upcoming Tickets</h2>
+      <a routerLink="/dashboard/tickets">See all &rarr;</a>
+    </div>
+
+    <app-empty-state *ngIf="ov.upcomingTickets.length === 0" title="No upcoming tickets" message="Explore events and book your next experience.">
+      <a icon routerLink="/events" class="btn btn-primary btn-sm">Browse Events</a>
+    </app-empty-state>
+
+    <div class="ticket-mini-grid" *ngIf="ov.upcomingTickets.length">
+      <div class="ticket-mini card" *ngFor="let t of ov.upcomingTickets">
+        <img [src]="t.event.posterImage | fileUrl" [alt]="t.event.title" />
+        <div class="ticket-mini-body">
+          <h4>{{ t.event.title }}</h4>
+          <p>{{ t.event.startDate | date: 'd MMM y' }} &middot; {{ t.ticketTypeName }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-header">
+      <h2 class="section-title">Recent Orders</h2>
+      <a routerLink="/dashboard/orders">See all &rarr;</a>
+    </div>
+
+    <app-empty-state *ngIf="ov.recentOrders.length === 0" title="No orders yet" message="Your order history will appear here." />
+
+    <div class="order-table card" *ngIf="ov.recentOrders.length">
+      <div class="order-row order-row-head">
+        <span>Order</span>
+        <span>Event</span>
+        <span>Amount</span>
+        <span>Status</span>
+      </div>
+      <div class="order-row" *ngFor="let o of ov.recentOrders">
+        <span>{{ o.orderNumber }}</span>
+        <span>{{ eventTitle(o) }}</span>
+        <span>{{ o.total | kes }}</span>
+        <span class="badge" [ngClass]="{
+          'badge-green': o.paymentStatus === 'PAID',
+          'badge-amber': o.paymentStatus === 'PENDING' || o.paymentStatus === 'PAYMENT_PENDING',
+          'badge-red': o.paymentStatus === 'FAILED' || o.paymentStatus === 'CANCELLED'
+        }">{{ o.paymentStatus }}</span>
+      </div>
+    </div>
+  </div>
+</ng-container>

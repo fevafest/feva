@@ -1,0 +1,57 @@
+<div class="dashboard-shell">
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    <div class="sidebar-brand">
+      <a routerLink="/" class="brand">
+        <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
+      </a>
+      <span class="portal-label">{{ portalName }}</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of visibleNavItems()"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.end ?? false }"
+        (click)="closeSidebar()"
+      >
+        <app-icon [name]="item.icon" [size]="19" />
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <span class="avatar-circle">{{ auth.currentUser()?.fullName?.charAt(0) }}</span>
+        <div>
+          <div class="user-name">{{ auth.currentUser()?.fullName }}</div>
+          <div class="user-role">{{ auth.currentUser()?.role }}</div>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <app-icon name="logout" [size]="18" />
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" *ngIf="sidebarOpen()" (click)="closeSidebar()"></div>
+
+  <div class="dashboard-main">
+    <header class="dashboard-topbar">
+      <button class="menu-btn" (click)="toggleSidebar()">
+        <app-icon name="menu" [size]="22" />
+      </button>
+      <a routerLink="/" class="back-link">
+        <app-icon name="arrow-right" [size]="16" />
+        <span>Back to site</span>
+      </a>
+    </header>
+
+    <main class="dashboard-content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <app-toast-container />
+</div>

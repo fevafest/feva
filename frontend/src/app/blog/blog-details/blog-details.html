@@ -1,0 +1,23 @@
+<app-loading-spinner *ngIf="loading()" />
+
+<div class="not-found container" *ngIf="notFound() && !loading()">
+  <h2>Article not found</h2>
+  <a routerLink="/blog" class="btn btn-primary">Back to Blog</a>
+</div>
+
+<article class="blog-article container" *ngIf="post() as p">
+  <a routerLink="/blog" class="back-link">&larr; Back to Blog</a>
+  <span class="badge badge-red" *ngIf="p.isFeatured">Featured</span>
+  <h1>{{ p.title }}</h1>
+  <div class="article-meta">
+    <span>By {{ p.author.fullName }}</span>
+    <span>&middot;</span>
+    <span>{{ p.publishedAt | date: 'd MMMM y' }}</span>
+  </div>
+
+  <div class="cover-image" *ngIf="p.coverImage">
+    <img [src]="p.coverImage | fileUrl" [alt]="p.title" />
+  </div>
+
+  <div class="article-content">{{ p.content }}</div>
+</article>

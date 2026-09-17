@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-primary: #e21221;
+  --color-primary-dark: #b80d1c;
+  --color-primary-light: #ff4757;
+  --color-black: #14141a;
+  --color-dark-gray: #3a3a42;
+  --color-gray: #6b7280;
+  --color-light-gray: #f4f4f6;
+  --color-border: #e6e6ea;
+  --color-white: #ffffff;
+
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(20, 20, 26, 0.08);
+  --shadow-md: 0 8px 24px rgba(20, 20, 26, 0.1);
+  --shadow-lg: 0 16px 40px rgba(20, 20, 26, 0.14);
+
+  --header-height: 76px;
+  --max-width: 1280px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-black);
+  background: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:disabled {
+  background: #f0a5aa;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-black);
+  border: 1.5px solid var(--color-border);
+}
+.btn-outline:hover {
+  border-color: var(--color-black);
+}
+
+.btn-dark {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+.btn-dark:hover {
+  background: #000;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-red {
+  background: rgba(226, 18, 33, 0.1);
+  color: var(--color-primary);
+}
+.badge-green {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+.badge-amber {
+  background: rgba(217, 119, 6, 0.12);
+  color: #d97706;
+}
+.badge-gray {
+  background: rgba(107, 114, 128, 0.12);
+  color: var(--color-gray);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-dark-gray);
+}
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: var(--color-white);
+  transition: border-color 0.15s ease;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.form-error {
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+.form-hint {
+  color: var(--color-gray);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.section {
+  padding: 56px 0;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.section-title {
+  font-size: 1.6rem;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 36px 0;
+  }
+  .section-title {
+    font-size: 1.3rem;
+  }
+}

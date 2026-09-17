@@ -1,0 +1,33 @@
+<div class="dash-header">
+  <h1>My Orders</h1>
+  <p>Track all your ticket purchases and payment status.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && orders().length === 0" title="No orders yet" message="Your purchase history will appear here.">
+  <a icon routerLink="/events" class="btn btn-primary btn-sm">Browse Events</a>
+</app-empty-state>
+
+<div class="orders-list" *ngIf="!loading() && orders().length">
+  <div class="order-card card" *ngFor="let o of orders()">
+    <div class="order-main">
+      <div class="order-number">{{ o.orderNumber }}</div>
+      <h4>{{ eventOf(o)?.title }}</h4>
+      <p>{{ eventOf(o)?.venue }}, {{ eventOf(o)?.location }} &middot; {{ o.quantity }} ticket{{ o.quantity > 1 ? 's' : '' }}</p>
+      <p class="order-date">Placed {{ o.createdAt | date: 'd MMM y, h:mm a' }}</p>
+    </div>
+    <div class="order-side">
+      <div class="order-amount">{{ o.total | kes }}</div>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': o.paymentStatus === 'PAID',
+          'badge-amber': o.paymentStatus === 'PENDING' || o.paymentStatus === 'PAYMENT_PENDING',
+          'badge-red': o.paymentStatus === 'FAILED' || o.paymentStatus === 'CANCELLED'
+        }"
+        >{{ o.paymentStatus }}</span
+      >
+    </div>
+  </div>
+</div>

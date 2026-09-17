@@ -1,0 +1,49 @@
+<div class="dash-header">
+  <h1>Payments</h1>
+  <p>M-Pesa transactions processed through PayHero for reconciliation.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'SUCCESS'" (click)="setFilter('SUCCESS')">Success</button>
+  <button [class.active]="filter() === 'PENDING'" (click)="setFilter('PENDING')">Pending</button>
+  <button [class.active]="filter() === 'FAILED'" (click)="setFilter('FAILED')">Failed</button>
+  <button [class.active]="filter() === 'CANCELLED'" (click)="setFilter('CANCELLED')">Cancelled</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state
+  *ngIf="!loading() && payments().length === 0"
+  title="No payment records yet"
+  message="Transactions will appear here once customers start paying via M-Pesa."
+/>
+
+<div class="table-card card" *ngIf="!loading() && payments().length">
+  <div class="table-row table-head">
+    <span>Reference</span>
+    <span>Customer</span>
+    <span>Event</span>
+    <span>Amount</span>
+    <span>Status</span>
+    <span>Date</span>
+  </div>
+  <div class="table-row" *ngFor="let p of payments()">
+    <span class="mono">{{ p.reference }}</span>
+    <span>{{ p.order.user?.fullName }}</span>
+    <span>{{ p.order.event?.title }}</span>
+    <span>{{ p.amount | kes }}</span>
+    <span>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': p.status === 'SUCCESS',
+          'badge-amber': p.status === 'PENDING',
+          'badge-red': p.status === 'FAILED' || p.status === 'CANCELLED'
+        }"
+        >{{ p.status }}</span
+      >
+    </span>
+    <span class="sub">{{ p.createdAt | date: 'd MMM y, h:mm a' }}</span>
+  </div>
+</div>

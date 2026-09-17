@@ -1,0 +1,33 @@
+<section class="help-header">
+  <div class="container">
+    <h1>Help Centre</h1>
+    <p>Answers to common questions about buying and selling tickets on FEVA FEST.</p>
+  </div>
+</section>
+
+<section class="container faq-section">
+  <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.open]="openIndex() === i">
+    <button class="faq-question" (click)="toggle(i)">
+      <span>{{ faq.question }}</span>
+      <app-icon name="chevron-down" [size]="18" />
+    </button>
+    <div class="faq-answer" *ngIf="openIndex() === i">
+      <p>{{ faq.answer }}</p>
+    </div>
+  </div>
+
+  <div class="contact-card card">
+    <h3>Still need help?</h3>
+    <p>Our support team is available to assist you with any questions.</p>
+    <div class="contact-methods">
+      <div class="contact-method">
+        <app-icon name="mail" [size]="18" />
+        <span>support&#64;fevafest.co.ke</span>
+      </div>
+      <div class="contact-method">
+        <app-icon name="phone" [size]="18" />
+        <span>+254 700 000 000</span>
+      </div>
+    </div>
+  </div>
+</section>

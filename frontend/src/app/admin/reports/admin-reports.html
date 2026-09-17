@@ -1,0 +1,38 @@
+<div class="dash-header">
+  <h1>Reports</h1>
+  <p>Revenue trends and top-performing events.</p>
+</div>
+
+<div class="summary-row">
+  <div class="card summary-card">
+    <div class="summary-label">Total Revenue</div>
+    <div class="summary-value">{{ totalRevenue() | kes }}</div>
+  </div>
+  <div class="card summary-card">
+    <div class="summary-label">Tickets Sold</div>
+    <div class="summary-value">{{ ticketsSold() }}</div>
+  </div>
+</div>
+
+<div class="card chart-card">
+  <h3>Revenue (Last 7 Days)</h3>
+  <div class="bar-chart">
+    <div class="bar-col" *ngFor="let d of revenueByDay()">
+      <div class="bar" [style.height.%]="barHeight(d.revenue)" [title]="d.revenue | kes"></div>
+      <span class="bar-label">{{ d.date | slice: 5 }}</span>
+    </div>
+  </div>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<div class="card top-events-card" *ngIf="!loading()">
+  <h3>Top Events by Revenue</h3>
+  <app-empty-state *ngIf="topEvents().length === 0" title="No sales data yet" />
+  <div class="top-event-row" *ngFor="let e of topEvents(); let i = index">
+    <span class="rank">{{ i + 1 }}</span>
+    <span class="title">{{ e.title }}</span>
+    <span class="sold">{{ e.ticketsSold }} sold</span>
+    <span class="revenue">{{ e.revenue | kes }}</span>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<section class="blog-header">
+  <div class="container">
+    <h1>FEVA FEST Blog</h1>
+    <p>Guides, stories and tips for Kenya's event scene.</p>
+  </div>
+</section>
+
+<section class="container">
+  <app-loading-spinner *ngIf="loading()" />
+
+  <app-empty-state *ngIf="!loading() && posts().length === 0" title="No articles yet" message="Check back soon for new posts." />
+
+  <div class="blog-grid" *ngIf="!loading() && posts().length">
+    <a class="blog-card card" *ngFor="let post of posts()" [routerLink]="['/blog', post.slug]">
+      <div class="blog-cover">
+        <img [src]="(post.coverImage || '') | fileUrl" [alt]="post.title" *ngIf="post.coverImage" />
+        <div class="blog-cover placeholder" *ngIf="!post.coverImage"></div>
+      </div>
+      <div class="blog-card-body">
+        <span class="badge badge-red" *ngIf="post.isFeatured">Featured</span>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.excerpt }}</p>
+        <div class="blog-meta">
+          <span>{{ post.author.fullName }}</span>
+          <span>&middot;</span>
+          <span>{{ post.publishedAt | date: 'd MMM y' }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>

@@ -1,0 +1,97 @@
+<app-loading-spinner *ngIf="loading()" label="Loading event..." />
+
+<div class="not-found container" *ngIf="notFound() && !loading()">
+  <h2>Event not found</h2>
+  <p>This event may have been removed or is no longer available.</p>
+  <a routerLink="/events" class="btn btn-primary">Browse Events</a>
+</div>
+
+<ng-container *ngIf="event() as ev">
+  <section class="event-banner">
+    <img [src]="ev.posterImage | fileUrl" [alt]="ev.title" />
+    <div class="banner-overlay"></div>
+  </section>
+
+  <div class="container event-layout">
+    <div class="event-main">
+      <span class="badge badge-red">{{ ev.category }}</span>
+      <h1>{{ ev.title }}</h1>
+
+      <div class="meta-row">
+        <div class="meta-item">
+          <app-icon name="calendar-event" [size]="18" />
+          <span>{{ dateLabel() }}</span>
+        </div>
+        <div class="meta-item">
+          <app-icon name="clock" [size]="18" />
+          <span>{{ ev.startTime }}<ng-container *ngIf="ev.endTime"> &ndash; {{ ev.endTime }}</ng-container></span>
+        </div>
+        <div class="meta-item">
+          <app-icon name="location" [size]="18" />
+          <span>{{ ev.venue }}, {{ ev.location }}</span>
+        </div>
+      </div>
+
+      <div class="content-card card">
+        <h3>About This Event</h3>
+        <p class="description">{{ ev.description }}</p>
+      </div>
+
+      <div class="content-card card organizer-card">
+        <h3>Organizer</h3>
+        <div class="organizer-row">
+          <div class="organizer-avatar">{{ ev.organizer.businessName.charAt(0) }}</div>
+          <div>
+            <div class="organizer-name">
+              {{ ev.organizer.businessName }}
+              <app-icon *ngIf="ev.organizer.isVerified" name="check-circle" [size]="15" class="verified-icon" />
+            </div>
+            <p *ngIf="ev.organizer.description">{{ ev.organizer.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="ticket-panel">
+      <div class="card ticket-card">
+        <h3>Select Tickets</h3>
+
+        <div class="ticket-type-row" *ngFor="let t of ev.ticketTypes">
+          <div class="ticket-type-info">
+            <div class="ticket-type-name">{{ t.name }}</div>
+            <div class="ticket-type-desc" *ngIf="t.description">{{ t.description }}</div>
+            <div class="ticket-type-price">{{ t.price | kes }}</div>
+            <div class="ticket-type-remaining" *ngIf="remaining(t._id) === 0">Sold out</div>
+            <div class="ticket-type-remaining" *ngIf="remaining(t._id) > 0 && remaining(t._id) <= 20">
+              Only {{ remaining(t._id) }} left
+            </div>
+          </div>
+          <div class="qty-stepper" *ngIf="remaining(t._id) > 0">
+            <button type="button" (click)="updateQuantity(t._id, -1)">&minus;</button>
+            <span>{{ quantities()[t._id] ?? 0 }}</span>
+            <button type="button" (click)="updateQuantity(t._id, 1)">+</button>
+          </div>
+        </div>
+
+        <div class="order-summary" *ngIf="totalQuantity() > 0">
+          <div class="summary-row">
+            <span>Subtotal ({{ totalQuantity() }} ticket{{ totalQuantity() > 1 ? 's' : '' }})</span>
+            <span>{{ subtotal() | kes }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Processing fee</span>
+            <span>{{ fees() | kes }}</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span>{{ total() | kes }}</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block buy-btn" (click)="proceedToCheckout()">
+          Buy Ticket{{ totalQuantity() > 1 ? 's' : '' }}
+        </button>
+      </div>
+    </aside>
+  </div>
+</ng-container>

@@ -1,0 +1,81 @@
+<div class="dash-header">
+  <h1>My Tickets</h1>
+  <p>All tickets purchased under your account.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state
+  *ngIf="!loading() && tickets().length === 0"
+  title="No tickets yet"
+  message="Once you buy a ticket, it will show up here with a scannable QR code."
+>
+  <a icon routerLink="/events" class="btn btn-primary btn-sm">Browse Events</a>
+</app-empty-state>
+
+<div class="ticket-grid" *ngIf="!loading() && tickets().length">
+  <div class="ticket-card" *ngFor="let t of tickets()" (click)="openTicket(t)">
+    <div class="ticket-poster">
+      <img [src]="t.event.posterImage | fileUrl" [alt]="t.event.title" />
+      <span
+        class="badge status-badge"
+        [ngClass]="{
+          'badge-green': t.status === 'VALID',
+          'badge-gray': t.status === 'USED',
+          'badge-red': t.status === 'CANCELLED'
+        }"
+        >{{ t.status }}</span
+      >
+    </div>
+    <div class="ticket-info">
+      <div class="ticket-type-tag">{{ t.ticketTypeName }}</div>
+      <h4>{{ t.event.title }}</h4>
+      <p>{{ t.event.startDate | date: 'EEE, d MMM y' }} &middot; {{ t.event.startTime }}</p>
+      <p class="venue">{{ t.event.venue }}, {{ t.event.location }}</p>
+      <div class="qr-thumb">
+        <img [src]="t.qrCodeImage" alt="QR code" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticket-modal-overlay" *ngIf="activeTicket() as t" (click)="closeTicket()">
+  <div class="ticket-modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeTicket()">
+      <app-icon name="x" [size]="20" />
+    </button>
+
+    <div class="ticket-modal-header">
+      <span class="brand-mark">FEVA</span><span class="brand-mark-alt">FEST</span>
+    </div>
+
+    <h3>{{ t.event.title }}</h3>
+    <p class="modal-meta">{{ t.event.startDate | date: 'EEEE, d MMMM y' }} &middot; {{ t.event.startTime }}</p>
+    <p class="modal-meta">{{ t.event.venue }}, {{ t.event.location }}</p>
+
+    <div class="qr-large">
+      <img [src]="t.qrCodeImage" alt="Ticket QR code" />
+    </div>
+
+    <div class="ticket-modal-details">
+      <div class="detail-item">
+        <span>Ticket Type</span>
+        <strong>{{ t.ticketTypeName }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Ticket Number</span>
+        <strong>{{ t.ticketId }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Price</span>
+        <strong>{{ t.price | kes }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Status</span>
+        <strong>{{ t.status }}</strong>
+      </div>
+    </div>
+
+    <p class="modal-footnote">Present this QR code at the entrance for scanning.</p>
+  </div>
+</div>

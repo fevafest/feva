@@ -1,0 +1,42 @@
+<div class="dash-header">
+  <h1>Organizers</h1>
+  <p>Approve organizer applications and monitor their performance.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'pending'" (click)="setFilter('pending')">Pending Approval</button>
+  <button [class.active]="filter() === 'approved'" (click)="setFilter('approved')">Approved</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && organizers().length === 0" title="No organizers found" />
+
+<div class="table-card card" *ngIf="!loading() && organizers().length">
+  <div class="table-row table-head">
+    <span>Business</span>
+    <span>Contact Person</span>
+    <span>Tickets Sold</span>
+    <span>Revenue</span>
+    <span>Status</span>
+    <span>Action</span>
+  </div>
+  <div class="table-row" *ngFor="let o of organizers()">
+    <span>{{ o.businessName }}</span>
+    <span>
+      <div>{{ userName(o) }}</div>
+      <div class="sub">{{ userEmail(o) }}</div>
+    </span>
+    <span>{{ o.totalTicketsSold }}</span>
+    <span>{{ o.totalRevenue | kes }}</span>
+    <span>
+      <span class="badge" [ngClass]="o.isApproved ? 'badge-green' : 'badge-amber'">
+        {{ o.isApproved ? 'Approved' : 'Pending' }}
+      </span>
+    </span>
+    <span>
+      <button class="btn btn-primary btn-sm" *ngIf="!o.isApproved" (click)="approve(o)">Approve</button>
+    </span>
+  </div>
+</div>

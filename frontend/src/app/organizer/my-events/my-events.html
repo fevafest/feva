@@ -1,0 +1,95 @@
+<div class="dash-header">
+  <div>
+    <h1>My Events</h1>
+    <p>Manage your events, ticket sales and revenue.</p>
+  </div>
+  <a routerLink="/organizer/events/new" class="btn btn-primary">
+    <app-icon name="plus" [size]="16" /> Create Event
+  </a>
+</div>
+
+<div class="stats-row" *ngIf="stats() as s">
+  <div class="stat-card card">
+    <div class="stat-icon"><app-icon name="calendar-event" [size]="20" /></div>
+    <div>
+      <div class="stat-value">{{ s.totalEvents }}</div>
+      <div class="stat-label">Total Events</div>
+    </div>
+  </div>
+  <div class="stat-card card">
+    <div class="stat-icon"><app-icon name="ticket" [size]="20" /></div>
+    <div>
+      <div class="stat-value">{{ s.totalTicketsSold }}</div>
+      <div class="stat-label">Tickets Sold</div>
+    </div>
+  </div>
+  <div class="stat-card card">
+    <div class="stat-icon"><app-icon name="wallet" [size]="20" /></div>
+    <div>
+      <div class="stat-value">{{ s.totalRevenue | kes }}</div>
+      <div class="stat-label">Total Revenue</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card sales-table" *ngIf="stats() as s" >
+  <h3>Sales by Event</h3>
+  <div class="sales-row sales-row-head">
+    <span>Event</span>
+    <span>Status</span>
+    <span>Tickets Sold</span>
+    <span>Revenue</span>
+  </div>
+  <div class="sales-row" *ngFor="let e of s.perEvent">
+    <span>{{ e.title }}</span>
+    <span class="badge badge-gray">{{ e.status.replace('_', ' ') }}</span>
+    <span>{{ e.ticketsSold }}</span>
+    <span>{{ e.revenue | kes }}</span>
+  </div>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && events().length === 0" title="No events yet" message="Create your first event to start selling tickets.">
+  <a icon routerLink="/organizer/events/new" class="btn btn-primary btn-sm">Create Event</a>
+</app-empty-state>
+
+<div class="events-table" *ngIf="!loading() && events().length">
+  <div class="event-row card" *ngFor="let e of events()">
+    <img [src]="e.posterImage | fileUrl" [alt]="e.title" />
+    <div class="event-row-info">
+      <h4>{{ e.title }}</h4>
+      <p>{{ e.startDate | date: 'd MMM y' }} &middot; {{ e.venue }}, {{ e.location }}</p>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': e.status === 'published',
+          'badge-amber': e.status === 'pending_approval',
+          'badge-gray': e.status === 'draft' || e.status === 'unpublished',
+          'badge-red': e.status === 'cancelled'
+        }"
+        >{{ e.status.replace('_', ' ') }}</span
+      >
+    </div>
+    <div class="event-row-actions">
+      <a [routerLink]="['/organizer/events', e._id, 'edit']" class="icon-btn" title="Edit">
+        <app-icon name="edit" [size]="16" />
+      </a>
+      <button
+        *ngIf="e.status === 'draft' || e.status === 'unpublished'"
+        class="icon-btn"
+        title="Submit for approval"
+        (click)="submitForApproval(e)"
+      >
+        <app-icon name="upload" [size]="16" />
+      </button>
+      <button *ngIf="e.status === 'published'" class="icon-btn" title="Unpublish" (click)="unpublish(e)">
+        <app-icon name="x-circle" [size]="16" />
+      </button>
+      <button class="icon-btn danger" title="Delete" (click)="remove(e)">
+        <app-icon name="trash" [size]="16" />
+      </button>
+    </div>
+  </div>
+</div>

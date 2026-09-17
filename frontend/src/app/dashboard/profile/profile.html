@@ -1,0 +1,49 @@
+<div class="dash-header">
+  <h1>Profile Settings</h1>
+  <p>Manage your personal information and password.</p>
+</div>
+
+<div class="profile-grid">
+  <div class="card profile-card">
+    <h3>Personal Information</h3>
+    <div class="avatar-row">
+      <div class="avatar-circle-lg">{{ auth.currentUser()?.fullName?.charAt(0) }}</div>
+      <div>
+        <div class="user-email">{{ auth.currentUser()?.email }}</div>
+        <div class="user-role-tag">{{ auth.currentUser()?.role }}</div>
+      </div>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-control" type="text" formControlName="fullName" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-control" type="tel" formControlName="phoneNumber" />
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="savingProfile()">
+        {{ savingProfile() ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="card profile-card">
+    <h3>Change Password</h3>
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input class="form-control" type="password" formControlName="currentPassword" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input class="form-control" type="password" formControlName="newPassword" />
+        <div class="form-hint">At least 6 characters.</div>
+      </div>
+      <button type="submit" class="btn btn-dark" [disabled]="savingPassword()">
+        {{ savingPassword() ? 'Updating...' : 'Change Password' }}
+      </button>
+    </form>
+  </div>
+</div>

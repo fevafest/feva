@@ -1,0 +1,49 @@
+<div class="dash-header">
+  <h1>Orders</h1>
+  <p>All ticket orders placed across the platform.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'PAID'" (click)="setFilter('PAID')">Paid</button>
+  <button [class.active]="filter() === 'PENDING'" (click)="setFilter('PENDING')">Pending</button>
+  <button [class.active]="filter() === 'PAYMENT_PENDING'" (click)="setFilter('PAYMENT_PENDING')">Awaiting M-Pesa</button>
+  <button [class.active]="filter() === 'FAILED'" (click)="setFilter('FAILED')">Failed</button>
+  <button [class.active]="filter() === 'CANCELLED'" (click)="setFilter('CANCELLED')">Cancelled</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && orders().length === 0" title="No orders found" />
+
+<div class="table-card card" *ngIf="!loading() && orders().length">
+  <div class="table-row table-head">
+    <span>Order</span>
+    <span>Customer</span>
+    <span>Event</span>
+    <span>Amount</span>
+    <span>Status</span>
+    <span>Date</span>
+  </div>
+  <div class="table-row" *ngFor="let o of orders()">
+    <span class="mono">{{ o.orderNumber }}</span>
+    <span>
+      <div>{{ userOf(o)?.fullName }}</div>
+      <div class="sub">{{ userOf(o)?.email }}</div>
+    </span>
+    <span>{{ eventOf(o)?.title }}</span>
+    <span>{{ o.total | kes }}</span>
+    <span>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-green': o.paymentStatus === 'PAID',
+          'badge-amber': o.paymentStatus === 'PENDING' || o.paymentStatus === 'PAYMENT_PENDING',
+          'badge-red': o.paymentStatus === 'FAILED' || o.paymentStatus === 'CANCELLED'
+        }"
+        >{{ o.paymentStatus }}</span
+      >
+    </span>
+    <span class="sub">{{ o.createdAt | date: 'd MMM y, h:mm a' }}</span>
+  </div>
+</div>

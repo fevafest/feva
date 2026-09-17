@@ -1,0 +1,51 @@
+.not-found {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.blog-article {
+  max-width: 760px;
+  padding: 32px 20px 80px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray);
+  margin-bottom: 16px;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin: 12px 0 10px;
+}
+
+.article-meta {
+  display: flex;
+  gap: 6px;
+  color: var(--color-gray);
+  font-size: 0.88rem;
+  margin-bottom: 24px;
+}
+
+.cover-image {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 28px;
+
+  img {
+    width: 100%;
+  }
+}
+
+.article-content {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--color-dark-gray);
+  white-space: pre-line;
+}

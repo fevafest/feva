@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /organizer/dashboard
+Disallow: /organizer/events
+Disallow: /organizer/scanner
+Disallow: /dashboard
+Allow: /

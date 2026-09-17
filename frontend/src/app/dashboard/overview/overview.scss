@@ -1,0 +1,134 @@
+.dash-header {
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+  p {
+    color: var(--color-gray);
+    margin: 0;
+  }
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: rgba(226, 18, 33, 0.1);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--color-gray);
+}
+
+.section-block {
+  margin-bottom: 36px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  a {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+}
+.section-title {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.ticket-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.ticket-mini {
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+}
+.ticket-mini-body {
+  padding: 14px;
+
+  h4 {
+    font-size: 0.92rem;
+    margin-bottom: 4px;
+  }
+  p {
+    font-size: 0.78rem;
+    color: var(--color-gray);
+    margin: 0;
+  }
+}
+
+.order-table {
+  overflow: hidden;
+}
+.order-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.6fr 1fr 1fr;
+  gap: 10px;
+  padding: 14px 18px;
+  font-size: 0.86rem;
+  border-bottom: 1px solid var(--color-light-gray);
+  align-items: center;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+.order-row-head {
+  background: var(--color-light-gray);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--color-gray);
+}
+
+@media (max-width: 900px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+  .ticket-mini-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .order-row {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 4px;
+  }
+}

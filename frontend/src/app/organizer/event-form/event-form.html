@@ -1,0 +1,116 @@
+<div class="dash-header">
+  <h1>{{ isEditMode() ? 'Edit Event' : 'Create New Event' }}</h1>
+  <p>Fill in the details below. Your event will be reviewed before it goes live.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading()" class="event-form">
+  <div class="card form-section">
+    <h3>Event Poster</h3>
+    <div class="poster-upload">
+      <div class="poster-preview" *ngIf="posterPreview()">
+        <img [src]="posterPreview()! | fileUrl" alt="Poster preview" />
+      </div>
+      <label class="upload-btn">
+        <app-icon name="upload" [size]="16" />
+        <span>{{ posterPreview() ? 'Change Poster' : 'Upload Poster' }}</span>
+        <input type="file" accept="image/*" (change)="onPosterSelected($event)" hidden />
+      </label>
+    </div>
+  </div>
+
+  <div class="card form-section">
+    <h3>Basic Information</h3>
+    <div class="form-group">
+      <label class="form-label">Event Title</label>
+      <input class="form-control" type="text" formControlName="title" placeholder="Nairobi Music Festival" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" formControlName="category">
+          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" rows="4" formControlName="description" placeholder="Describe your event..."></textarea>
+    </div>
+  </div>
+
+  <div class="card form-section">
+    <h3>Date, Time &amp; Venue</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-control" type="date" formControlName="startDate" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Start Time</label>
+        <input class="form-control" type="text" formControlName="startTime" placeholder="e.g. 6:00 PM" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">End Time</label>
+        <input class="form-control" type="text" formControlName="endTime" placeholder="e.g. 11:00 PM" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Venue</label>
+        <input class="form-control" type="text" formControlName="venue" placeholder="Uhuru Gardens" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">City / Location</label>
+        <input class="form-control" type="text" formControlName="location" placeholder="Nairobi" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Full Address (optional)</label>
+      <input class="form-control" type="text" formControlName="address" />
+    </div>
+  </div>
+
+  <div class="card form-section">
+    <div class="section-head">
+      <h3>Ticket Categories</h3>
+      <button type="button" class="btn btn-outline btn-sm" (click)="addTicketType()">
+        <app-icon name="plus" [size]="14" /> Add Ticket Type
+      </button>
+    </div>
+
+    <div class="ticket-type-form-row" *ngFor="let group of ticketTypes.controls; let i = index" [formGroup]="$any(group)">
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-control" type="text" formControlName="name" placeholder="e.g. VIP" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Price (KES)</label>
+        <input class="form-control" type="number" min="0" formControlName="price" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Quantity</label>
+        <input class="form-control" type="number" min="1" formControlName="quantityTotal" />
+      </div>
+      <div class="form-group description-field">
+        <label class="form-label">Description</label>
+        <input class="form-control" type="text" formControlName="description" />
+      </div>
+      <button type="button" class="remove-btn" (click)="removeTicketType(i)" *ngIf="ticketTypes.length > 1">
+        <app-icon name="trash" [size]="16" />
+      </button>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <a [routerLink]="backPath()" class="btn btn-outline">Cancel</a>
+    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+      {{ submitting() ? 'Saving...' : isEditMode() ? 'Save Changes' : 'Create Event' }}
+    </button>
+  </div>
+</form>
