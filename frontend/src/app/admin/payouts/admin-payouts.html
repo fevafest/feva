@@ -1,0 +1,69 @@
+<div class="dash-header">
+  <div>
+    <h1>Payouts</h1>
+    <p>Manage affiliate commissions from Pending through Available to Paid.</p>
+  </div>
+  <button class="btn btn-primary" (click)="bulkMarkPaid()">Mark Available as Paid</button>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="statusFilter() === 'all'" (click)="setStatusFilter('all')">All</button>
+  <button [class.active]="statusFilter() === 'PENDING'" (click)="setStatusFilter('PENDING')">Pending</button>
+  <button [class.active]="statusFilter() === 'AVAILABLE'" (click)="setStatusFilter('AVAILABLE')">Available</button>
+  <button [class.active]="statusFilter() === 'PAID'" (click)="setStatusFilter('PAID')">Paid</button>
+</div>
+
+<div class="search-bar">
+  <select class="form-control" [ngModel]="affiliateFilter()" (ngModelChange)="setAffiliateFilter($event)">
+    <option value="">All affiliates</option>
+    <option *ngFor="let a of affiliates()" [value]="a._id">{{ a.displayName }} ({{ a.code }})</option>
+  </select>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && commissions().length === 0" title="No commissions found" />
+
+<div class="table-card card" *ngIf="!loading() && commissions().length">
+  <div class="table-row table-head">
+    <span>Affiliate</span>
+    <span>Event</span>
+    <span>Order</span>
+    <span>Commission</span>
+    <span>Status</span>
+    <span>Action</span>
+  </div>
+  <div class="table-row" *ngFor="let c of commissions()">
+    <span>{{ affiliateName(c) }}</span>
+    <span>{{ eventTitle(c) }}</span>
+    <span class="mono">{{ orderNumber(c) }}</span>
+    <span>{{ c.commissionAmount | kes }}</span>
+    <span>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-amber': c.status === 'PENDING',
+          'badge-gray': c.status === 'AVAILABLE',
+          'badge-green': c.status === 'PAID'
+        }"
+        >{{ c.status }}</span
+      >
+    </span>
+    <span>
+      <button
+        *ngIf="c.status === 'PENDING'"
+        class="btn btn-outline btn-sm"
+        (click)="updateStatus(c, 'AVAILABLE')"
+      >
+        Mark Available
+      </button>
+      <button
+        *ngIf="c.status === 'AVAILABLE'"
+        class="btn btn-primary btn-sm"
+        (click)="updateStatus(c, 'PAID')"
+      >
+        Mark Paid
+      </button>
+    </span>
+  </div>
+</div>

@@ -18,6 +18,11 @@ const organizerNav: DashboardNavItem[] = [
   { label: 'Ticket Scanner', path: '/organizer/scanner', icon: 'scan' },
 ];
 
+const affiliateNav: DashboardNavItem[] = [
+  { label: 'Overview', path: '/affiliate/dashboard', icon: 'dashboard', end: true },
+  { label: 'Commissions', path: '/affiliate/commissions', icon: 'credit-card' },
+];
+
 const adminNav: DashboardNavItem[] = [
   { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true },
   { label: 'Events', path: '/admin/events', icon: 'calendar-event' },
@@ -27,7 +32,9 @@ const adminNav: DashboardNavItem[] = [
   { label: 'Scanner', path: '/admin/scanner', icon: 'scan' },
   { label: 'Users', path: '/admin/users', icon: 'users' },
   { label: 'Organizers', path: '/admin/organizers', icon: 'briefcase' },
+  { label: 'Affiliates', path: '/admin/affiliates', icon: 'megaphone' },
   { label: 'Payments', path: '/admin/payments', icon: 'credit-card', superAdminOnly: true },
+  { label: 'Payouts', path: '/admin/payouts', icon: 'wallet' },
   { label: 'Reports', path: '/admin/reports', icon: 'chart' },
   { label: 'Admins', path: '/admin/admins', icon: 'shield', superAdminOnly: true },
   { label: 'Settings', path: '/admin/settings', icon: 'settings' },
@@ -77,6 +84,10 @@ export const routes: Routes = [
       {
         path: 'organizer',
         loadComponent: () => import('./organizer/onboarding/onboarding').then((m) => m.OrganizerOnboardingComponent),
+      },
+      {
+        path: 'affiliate',
+        loadComponent: () => import('./affiliate/onboarding/onboarding').then((m) => m.AffiliateOnboardingComponent),
       },
     ],
   },
@@ -142,6 +153,32 @@ export const routes: Routes = [
   },
 
   {
+    path: 'affiliate/dashboard',
+    canActivate: [authGuard, roleGuard(['affiliate', 'admin'])],
+    component: DashboardLayoutComponent,
+    data: { portalName: 'Affiliate Portal', navItems: affiliateNav },
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./affiliate/dashboard/dashboard').then((m) => m.AffiliateDashboardComponent),
+      },
+    ],
+  },
+  {
+    path: 'affiliate/commissions',
+    canActivate: [authGuard, roleGuard(['affiliate', 'admin'])],
+    component: DashboardLayoutComponent,
+    data: { portalName: 'Affiliate Portal', navItems: affiliateNav },
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./affiliate/commissions/commissions').then((m) => m.AffiliateCommissionsComponent),
+      },
+    ],
+  },
+
+  {
     path: 'admin',
     canActivate: [authGuard, roleGuard(['admin'])],
     component: DashboardLayoutComponent,
@@ -170,6 +207,14 @@ export const routes: Routes = [
       {
         path: 'organizers',
         loadComponent: () => import('./admin/organizers/admin-organizers').then((m) => m.AdminOrganizersComponent),
+      },
+      {
+        path: 'affiliates',
+        loadComponent: () => import('./admin/affiliates/admin-affiliates').then((m) => m.AdminAffiliatesComponent),
+      },
+      {
+        path: 'payouts',
+        loadComponent: () => import('./admin/payouts/admin-payouts').then((m) => m.AdminPayoutsComponent),
       },
       {
         path: 'payments',

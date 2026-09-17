@@ -1,0 +1,44 @@
+<div class="dash-header">
+  <h1>My Commissions</h1>
+  <p>Every commission earned, with its payout status.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'PENDING'" (click)="setFilter('PENDING')">Pending</button>
+  <button [class.active]="filter() === 'AVAILABLE'" (click)="setFilter('AVAILABLE')">Available</button>
+  <button [class.active]="filter() === 'PAID'" (click)="setFilter('PAID')">Paid</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && commissions().length === 0" title="No commissions yet" message="They'll show up here as soon as a sale through your link is confirmed." />
+
+<div class="table-card card" *ngIf="!loading() && commissions().length">
+  <div class="table-row table-head">
+    <span>Event</span>
+    <span>Order</span>
+    <span>Base &times; Rate</span>
+    <span>Commission</span>
+    <span>Status</span>
+    <span>Date</span>
+  </div>
+  <div class="table-row" *ngFor="let c of commissions()">
+    <span>{{ eventTitle(c) }}</span>
+    <span class="mono">{{ orderNumber(c) }}</span>
+    <span class="sub">{{ c.baseAmount | kes }} &times; {{ c.commissionPercent }}%</span>
+    <span class="commission-amount">{{ c.commissionAmount | kes }}</span>
+    <span>
+      <span
+        class="badge"
+        [ngClass]="{
+          'badge-amber': c.status === 'PENDING',
+          'badge-gray': c.status === 'AVAILABLE',
+          'badge-green': c.status === 'PAID'
+        }"
+        >{{ c.status }}</span
+      >
+    </span>
+    <span class="sub">{{ c.createdAt | date: 'd MMM y' }}</span>
+  </div>
+</div>

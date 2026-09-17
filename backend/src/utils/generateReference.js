@@ -15,4 +15,19 @@ function generateTicketId() {
   return `TKT-${nanoidAlphaNum()}-${nanoidNumeric()}`;
 }
 
-module.exports = { generateOrderNumber, generatePaymentReference, generateTicketId };
+/** Human-readable affiliate code, e.g. "DJKMANDE-7X2K", used in ?ref= links. */
+function generateAffiliateCode(displayName) {
+  const base =
+    String(displayName || 'FEVA')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 10) || 'FEVA';
+  return `${base}-${nanoidAlphaNum().slice(0, 4)}`;
+}
+
+module.exports = {
+  generateOrderNumber,
+  generatePaymentReference,
+  generateTicketId,
+  generateAffiliateCode,
+};

@@ -4,4 +4,6 @@ Disallow: /organizer/dashboard
 Disallow: /organizer/events
 Disallow: /organizer/scanner
 Disallow: /dashboard
+Disallow: /affiliate/dashboard
+Disallow: /affiliate/commissions
 Allow: /

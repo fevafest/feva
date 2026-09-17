@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AffiliateTrackingService } from './core/services/affiliate-tracking.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   template: `<router-outlet />`,
 })
-export class App {}
+export class App {
+  private readonly affiliateTracking = inject(AffiliateTrackingService);
+
+  constructor() {
+    this.affiliateTracking.init();
+  }
+}

@@ -32,6 +32,7 @@ export class HeaderComponent {
     const role = this.auth.currentUser()?.role;
     if (role === 'admin') return '/admin';
     if (role === 'organizer') return '/organizer';
+    if (role === 'affiliate') return '/affiliate';
     return '/dashboard';
   }
 

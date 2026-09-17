@@ -1,0 +1,96 @@
+<div class="dash-header">
+  <h1>Affiliates</h1>
+  <p>Approve applications and manage commission rates.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+  <button [class.active]="filter() === 'pending'" (click)="setFilter('pending')">Pending Approval</button>
+  <button [class.active]="filter() === 'approved'" (click)="setFilter('approved')">Approved</button>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<app-empty-state *ngIf="!loading() && affiliates().length === 0" title="No affiliates found" />
+
+<div class="affiliate-list" *ngIf="!loading() && affiliates().length">
+  <div class="affiliate-card card" *ngFor="let a of affiliates()">
+    <div class="affiliate-main">
+      <div class="affiliate-identity">
+        <div class="affiliate-name">
+          {{ a.displayName }}
+          <span class="badge badge-gray type-badge">{{ a.type }}</span>
+        </div>
+        <div class="sub">{{ userName(a) }} &middot; {{ userEmail(a) }}</div>
+        <div class="code-line">
+          Code: <code>{{ a.code }}</code> &middot; {{ a.totalClicks }} clicks
+        </div>
+      </div>
+
+      <div class="affiliate-status">
+        <span class="badge" [ngClass]="a.isApproved ? 'badge-green' : 'badge-amber'">
+          {{ a.isApproved ? 'Approved' : 'Pending' }}
+        </span>
+        <span class="badge" [ngClass]="a.isActive ? 'badge-green' : 'badge-red'">
+          {{ a.isActive ? 'Active' : 'Deactivated' }}
+        </span>
+      </div>
+
+      <div class="rate-editor">
+        <label>Default rate</label>
+        <div class="rate-input-row">
+          <input
+            type="number"
+            min="0"
+            max="100"
+            class="form-control rate-input"
+            [ngModel]="rateValue(a)"
+            (ngModelChange)="setRateValue(a, $event)"
+          />
+          <span>%</span>
+          <button class="btn btn-outline btn-sm" (click)="saveDefaultRate(a)">Save</button>
+        </div>
+      </div>
+
+      <div class="affiliate-actions">
+        <button *ngIf="!a.isApproved" class="btn btn-primary btn-sm" (click)="approve(a)">Approve</button>
+        <button class="btn btn-outline btn-sm" (click)="toggleActive(a)">
+          {{ a.isActive ? 'Deactivate' : 'Activate' }}
+        </button>
+        <button class="btn btn-outline btn-sm" (click)="toggleEventRates(a)">
+          {{ expandedId() === a._id ? 'Hide' : 'Event Rates' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="event-rates-panel" *ngIf="expandedId() === a._id">
+      <h4>Per-Event Commission Overrides</h4>
+
+      <div class="rate-row" *ngFor="let r of eventRates()">
+        <span>{{ eventTitle(r) }}</span>
+        <span class="rate-pill">{{ r.commissionPercent }}%</span>
+        <button class="icon-btn danger" (click)="removeEventRate(a, r)">
+          <app-icon name="trash" [size]="14" />
+        </button>
+      </div>
+      <p class="no-rates" *ngIf="eventRates().length === 0">No event-specific overrides yet — the default rate applies to all events.</p>
+
+      <div class="add-rate-row">
+        <select class="form-control" [ngModel]="newRateEventId()" (ngModelChange)="newRateEventId.set($event)">
+          <option value="">Select event...</option>
+          <option *ngFor="let e of events()" [value]="e._id">{{ e.title }}</option>
+        </select>
+        <input
+          type="number"
+          min="0"
+          max="100"
+          class="form-control rate-input"
+          [ngModel]="newRatePercent()"
+          (ngModelChange)="newRatePercent.set($event)"
+        />
+        <span>%</span>
+        <button class="btn btn-primary btn-sm" (click)="addEventRate(a)">Add / Update</button>
+      </div>
+    </div>
+  </div>
+</div>

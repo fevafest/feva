@@ -20,6 +20,7 @@ const userRoutes = require('./routes/userRoutes');
 const organizerRoutes = require('./routes/organizerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const affiliateRoutes = require('./routes/affiliateRoutes');
 
 const app = express();
 
@@ -89,6 +90,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/organizers', organizerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/affiliates', affiliateRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

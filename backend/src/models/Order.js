@@ -16,6 +16,11 @@ const orderSchema = new mongoose.Schema(
     orderNumber: { type: String, required: true, unique: true, index: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
+    // Attribution captured at checkout time (from a ?ref=CODE link). Only
+    // ever used to credit a commission once payment is confirmed — see
+    // paymentController.payheroCallback.
+    affiliate: { type: mongoose.Schema.Types.ObjectId, ref: 'Affiliate' },
+    affiliateCode: { type: String, trim: true, uppercase: true },
     items: [orderItemSchema],
     tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ticket' }],
     quantity: { type: Number, required: true },
@@ -44,5 +49,6 @@ const orderSchema = new mongoose.Schema(
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ event: 1 });
 orderSchema.index({ paymentStatus: 1 });
+orderSchema.index({ affiliate: 1, paymentStatus: 1 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -1,0 +1,100 @@
+<div class="dash-header">
+  <h1>Affiliate Dashboard</h1>
+  <p>Track your link performance and commissions.</p>
+</div>
+
+<app-loading-spinner *ngIf="loading()" />
+
+<ng-container *ngIf="!loading() && stats() as s">
+  <div class="pending-banner" *ngIf="!s.affiliate.isApproved">
+    <app-icon name="clock" [size]="18" />
+    <span>Your affiliate account is awaiting admin approval. Your link won't track sales until it's approved.</span>
+  </div>
+
+  <div class="card link-card">
+    <div class="link-label">Your unique link</div>
+    <div class="link-row">
+      <code class="link-value">{{ shareLink }}</code>
+      <button class="btn btn-primary btn-sm" (click)="copyLink()">
+        {{ copied() ? 'Copied!' : 'Copy Link' }}
+      </button>
+    </div>
+    <p class="link-hint">
+      Share this anywhere, or append it to any event page, e.g.
+      <code>/events/some-event?ref={{ s.affiliate.code }}</code>. Clicks and sales through it are
+      tracked automatically.
+    </p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="eye" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.totalClicks }}</div>
+        <div class="stat-label">Clicks</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="ticket" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.ticketsSold }}</div>
+        <div class="stat-label">Tickets Sold</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="wallet" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.revenueGenerated | kes }}</div>
+        <div class="stat-label">Revenue Generated</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="chart" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.conversionRate }}%</div>
+        <div class="stat-label">Conversion Rate</div>
+      </div>
+    </div>
+    <div class="stat-card card">
+      <div class="stat-icon"><app-icon name="credit-card" [size]="20" /></div>
+      <div>
+        <div class="stat-value">{{ s.commissionEarned | kes }}</div>
+        <div class="stat-label">Commission Earned</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="commission-breakdown card">
+    <h3>Commission Breakdown</h3>
+    <div class="breakdown-row">
+      <span class="badge badge-amber">Pending</span>
+      <span>{{ s.commissionPending | kes }}</span>
+    </div>
+    <div class="breakdown-row">
+      <span class="badge badge-gray">Available</span>
+      <span>{{ s.commissionAvailable | kes }}</span>
+    </div>
+    <div class="breakdown-row">
+      <span class="badge badge-green">Paid</span>
+      <span>{{ s.commissionPaid | kes }}</span>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h3 class="section-title">Performance by Event</h3>
+    <app-empty-state *ngIf="s.perEvent.length === 0" title="No sales yet" message="Once someone buys a ticket through your link, it'll show up here." />
+
+    <div class="event-table card" *ngIf="s.perEvent.length">
+      <div class="event-row event-row-head">
+        <span>Event</span>
+        <span>Tickets Sold</span>
+        <span>Revenue</span>
+      </div>
+      <div class="event-row" *ngFor="let e of s.perEvent">
+        <span>{{ e.title }}</span>
+        <span>{{ e.ticketsSold }}</span>
+        <span>{{ e.revenue | kes }}</span>
+      </div>
+    </div>
+  </div>
+</ng-container>

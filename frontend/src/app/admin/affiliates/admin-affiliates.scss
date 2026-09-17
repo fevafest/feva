@@ -1,0 +1,148 @@
+.affiliate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.affiliate-card {
+  padding: 18px 20px;
+}
+
+.affiliate-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.affiliate-identity {
+  flex: 1;
+  min-width: 220px;
+}
+.affiliate-name {
+  font-weight: 700;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.type-badge {
+  text-transform: capitalize;
+}
+.sub {
+  font-size: 0.8rem;
+  color: var(--color-gray);
+  margin-bottom: 4px;
+}
+.code-line {
+  font-size: 0.78rem;
+  color: var(--color-dark-gray);
+
+  code {
+    background: var(--color-light-gray);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+}
+
+.affiliate-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.rate-editor {
+  label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+}
+.rate-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rate-input {
+  width: 70px;
+  padding: 8px 10px;
+}
+
+.affiliate-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.event-rates-panel {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-light-gray);
+
+  h4 {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+}
+
+.rate-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.88rem;
+
+  span:first-child {
+    flex: 1;
+  }
+}
+.rate-pill {
+  background: var(--color-light-gray);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.no-rates {
+  font-size: 0.82rem;
+  color: var(--color-gray);
+  margin-bottom: 12px;
+}
+
+.add-rate-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+
+  select {
+    flex: 1;
+    min-width: 180px;
+  }
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-dark-gray);
+  flex-shrink: 0;
+
+  &.danger:hover {
+    background: rgba(226, 18, 33, 0.08);
+    color: var(--color-primary);
+  }
+}

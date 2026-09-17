@@ -7,6 +7,7 @@ const { ApiError, success } = require('../utils/apiResponse');
 const payheroService = require('../services/payheroService');
 const { generateTicketsForOrder } = require('../services/ticketService');
 const emailService = require('../services/emailService');
+const { createCommissionForOrder } = require('../services/affiliateService');
 
 /**
  * POST /api/payments/initiate
@@ -137,6 +138,12 @@ const payheroCallback = asyncHandler(async (req, res) => {
     const tickets = await generateTicketsForOrder(order);
     order.tickets = tickets.map((t) => t._id);
     await order.save();
+
+    // Commission is only ever created here, after payment is confirmed —
+    // never at order/checkout time. No-ops if the order has no affiliate.
+    await createCommissionForOrder(order).catch((err) =>
+      console.error('[payheroCallback] Commission creation failed:', err.message)
+    );
 
     // Best-effort: email the customer their QR tickets. Never blocks or
     // fails the payment confirmation if email isn't configured/reachable.

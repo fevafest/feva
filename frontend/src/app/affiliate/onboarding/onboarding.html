@@ -1,0 +1,79 @@
+<div class="onboarding-page">
+  <div class="onboarding-card card" *ngIf="!submitted()">
+    <div class="icon-wrap"><app-icon name="megaphone" [size]="28" /></div>
+    <h1>Become a FEVA FEST Affiliate</h1>
+    <p class="subtitle">
+      Get a unique link, promote any event, and earn a commission on every ticket you sell.
+    </p>
+
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <p class="login-notice">You need an account to apply as an affiliate.</p>
+      <a routerLink="/auth/login" [queryParams]="{ redirect: '/affiliate' }" class="btn btn-primary btn-block"
+        >Log In to Continue</a
+      >
+      <a routerLink="/auth/register" class="btn btn-outline btn-block">Create an Account</a>
+    </ng-container>
+
+    <form *ngIf="auth.isLoggedIn()" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <input class="form-control" type="text" formControlName="displayName" placeholder="DJ Kmande / @yourhandle" />
+        <div class="form-error" *ngIf="form.get('displayName')?.touched && form.get('displayName')?.invalid">
+          Display name is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">What best describes you?</label>
+        <select class="form-control" formControlName="type">
+          <option value="influencer">Influencer</option>
+          <option value="dj">DJ</option>
+          <option value="promoter">Promoter</option>
+          <option value="brand">Brand</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Bio (optional)</label>
+        <textarea class="form-control" rows="3" formControlName="bio" placeholder="A short intro for your profile"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Instagram</label>
+          <input class="form-control" type="text" formControlName="instagram" placeholder="@yourhandle" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">TikTok</label>
+          <input class="form-control" type="text" formControlName="tiktok" placeholder="@yourhandle" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Twitter / X</label>
+          <input class="form-control" type="text" formControlName="twitter" placeholder="@yourhandle" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input class="form-control" type="text" formControlName="website" placeholder="https://..." />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+        {{ submitting() ? 'Submitting...' : 'Submit Application' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="onboarding-card card" *ngIf="submitted()">
+    <div class="icon-wrap success"><app-icon name="check-circle" [size]="28" /></div>
+    <h1>Application Submitted</h1>
+    <p class="subtitle">
+      Your affiliate code <strong>{{ createdCode() }}</strong> has been created. An admin will
+      review and approve your account before your link starts tracking sales.
+    </p>
+    <a routerLink="/affiliate/dashboard" class="btn btn-primary">Go to Affiliate Dashboard</a>
+  </div>
+</div>

@@ -7,6 +7,7 @@ import { CheckoutStateService, CheckoutSelection } from '../../core/services/che
 import { OrderService } from '../../core/services/order.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { AffiliateTrackingService } from '../../core/services/affiliate-tracking.service';
 import { Order } from '../../core/models/order.model';
 import { KesCurrencyPipe } from '../../shared/pipes/kes-currency.pipe';
 import { FileUrlPipe } from '../../shared/pipes/file-url.pipe';
@@ -29,6 +30,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private readonly orderService = inject(OrderService);
   private readonly paymentService = inject(PaymentService);
   private readonly notify = inject(NotificationService);
+  private readonly affiliateTracking = inject(AffiliateTrackingService);
 
   selection: CheckoutSelection | null = null;
   readonly step = signal<CheckoutStep>('summary');
@@ -76,6 +78,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         eventId: this.selection.event._id,
         items: this.selection.items.map((i) => ({ ticketTypeId: i.ticketTypeId, quantity: i.quantity })),
         phoneNumber,
+        affiliateCode: this.affiliateTracking.getStoredCode() ?? undefined,
       })
       .subscribe({
         next: (orderRes) => {

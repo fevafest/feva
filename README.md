@@ -180,7 +180,8 @@ Without PayHero credentials configured, `POST /api/payments/initiate` fails safe
 |---|---|
 | `customer` | Browse events, buy tickets, view dashboard/tickets/orders |
 | `organizer` | Everything a customer can do, plus create/manage their own events, view sales, scan tickets |
-| `admin` | Approve organizers, create/edit/publish/unpublish events (including images and prices), manage users, orders, tickets, reports |
+| `affiliate` | Gets a unique tracked link/code; dashboard shows clicks, sales and commissions earned |
+| `admin` | Approve organizers/affiliates, create/edit/publish/unpublish events (including images and prices), manage users, orders, tickets, affiliate rates and payouts, reports |
 | `admin` + superadmin flag | Everything a regular admin can do, **plus** the only role that can view **Payments** and create/manage other admin accounts |
 | `staff` | Ticket scanning only (assign this role to door staff who shouldn't get organizer/admin access) |
 
@@ -209,7 +210,27 @@ Every ticket can only be scanned into use **once**: `PATCH /api/tickets/:ticketI
 
 **Admin → Scanner** and **Organizer → Ticket Scanner** open a camera-based QR scanner (using the `qr-scanner` library) that calls `POST /api/tickets/verify` and `PATCH /api/tickets/:ticketId/use`. It requires camera permission in the browser and a secure context (`https://` or `localhost`).
 
-## 10. Production Deployment (Vercel + Render)
+## 10. Affiliate / Referral System
+
+Every influencer, DJ, promoter or brand can get a unique tracked link that credits them for the tickets and revenue they generate — commissions are only ever recorded once PayHero confirms payment, never at click or checkout time, which is what makes the system hard to game.
+
+**How it works end to end:**
+1. **Apply** — anyone logged in can apply via **Become an Affiliate** (footer link, or `/affiliate`). This creates an `Affiliate` profile with a unique code like `DJKMANDE-7X2K`, `isApproved: false` by default.
+2. **Admin approves** — from **Admin → Affiliates**. An unapproved or deactivated affiliate's code is silently ignored everywhere (clicks aren't logged, checkouts aren't attributed) — it never breaks anything for a visitor, it just doesn't track.
+3. **Share the link** — the affiliate's dashboard shows their shareable link (`https://yourdomain.com/?ref=CODE`, or appended to any specific event URL, e.g. `/events/some-event?ref=CODE`).
+4. **Click tracking** — any page load with `?ref=CODE` in the URL is captured by the frontend (`AffiliateTrackingService`, wired in at the app root), which stores the code in `localStorage` for 30 days and fires a fire-and-forget hit to `POST /api/affiliates/track-click`. A bad/unknown/inactive code is accepted and ignored (still returns 200, so it can't be used to probe which codes exist).
+5. **Checkout attribution** — when the customer eventually buys tickets (same visit or weeks later, as long as it's within the 30-day window), the checkout flow reads the stored code and sends it along when creating the order. The backend resolves it to a real, approved `Affiliate` and stores that reference **on the order** — but this is attribution only, not money yet. An affiliate can't credit themselves; buying with your own code is silently ignored.
+6. **Commission — only on confirmed payment** — the `Commission` record is created in exactly one place: inside `paymentController.payheroCallback`'s success branch, after PayHero confirms the M-Pesa payment and tickets have been generated. Nothing the frontend does can create or fake a commission. A duplicate PayHero callback can't double-credit one either — `Commission.order` has a unique index, on top of the existing idempotency guard that already stops a processed order from being touched twice.
+7. **Commission rate** — an affiliate has a `defaultCommissionPercent` (set at approval, editable anytime from **Admin → Affiliates**). Admins can also set a **per-event override rate** for a specific affiliate (e.g. 20% for one big event instead of their usual 10%) — whichever exists is used, checked at the moment the commission is created.
+8. **Payouts** — every commission starts `PENDING`. From **Admin → Payouts**, an admin moves it to `AVAILABLE` (e.g. once refund windows have passed) and then `PAID` (individually, or in bulk per affiliate with one click). The affiliate's own dashboard shows the pending/available/paid breakdown of everything they've earned.
+
+**Affiliate dashboard** (`/affiliate/dashboard`, `/affiliate/commissions`) shows: their link, total clicks, tickets sold, revenue generated, conversion rate (paid orders ÷ clicks), commission earned (broken down by payout status), and a per-event performance table.
+
+**Admin control** (`/admin/affiliates`, `/admin/payouts`): approve/deactivate affiliates, edit default commission rates, add/remove per-event rate overrides, and manage the Pending → Available → Paid payout pipeline for every affiliate on the platform.
+
+Configuration: `AFFILIATE_DEFAULT_COMMISSION_PERCENT` in `backend/.env` sets the starting default rate (10% out of the box) assigned to a newly approved affiliate.
+
+## 11. Production Deployment (Vercel + Render)
 
 Code is on GitHub at `https://github.com/fevafest/feva.git`. Deployment order matters because the frontend needs to know the backend's URL at build time — deploy the backend first.
 
@@ -257,11 +278,11 @@ Code is on GitHub at `https://github.com/fevafest/feva.git`. Deployment order ma
 
 - ✅ **Code pushed to GitHub** — `https://github.com/fevafest/feva.git`, `main` branch.
 - ✅ **MongoDB connected** and a superadmin account created on it (`admin@fevafest.co.ke` — password was shown once when created; change it from Admin → Settings after first login).
-- ⏳ **Deploy backend to Render** and **frontend to Vercel** — see section 10 for the exact steps (`render.yaml` and `frontend/vercel.json` are already in the repo to make this closer to one-click).
+- ⏳ **Deploy backend to Render** and **frontend to Vercel** — see section 11 for the exact steps (`render.yaml` and `frontend/vercel.json` are already in the repo to make this closer to one-click).
 - ⏳ **Update `frontend/src/environments/environment.prod.ts`** with the real Render URL once it exists (currently a placeholder), then push again.
 - ⏳ **Real PayHero credentials** (`PAYHERO_USERNAME`, `PAYHERO_PASSWORD`, `PAYHERO_CHANNEL_ID`) and a public HTTPS `PAYHERO_CALLBACK_URL` — see section 4.
 - ⏳ **SMTP credentials** for `EMAIL_HOST` / `EMAIL_USER` / `EMAIL_PASS` — see the emailing recommendation earlier (Brevo). Without this, tickets still generate correctly, they just won't be emailed.
-- **Optional — persistent file storage:** free Render tier wipes uploaded images on redeploy; fixed by a Persistent Disk on a paid plan (steps in section 10) or by moving uploads to Cloudinary/S3 — either works, your call.
+- **Optional — persistent file storage:** free Render tier wipes uploaded images on redeploy; fixed by a Persistent Disk on a paid plan (steps in section 11) or by moving uploads to Cloudinary/S3 — either works, your call.
 - **Optional — SMS OTP login instead of password login:** the current phone login still requires a password (just like email login). If you'd rather have players receive a one-time code by SMS instead, that needs a paid SMS gateway (e.g. Africa's Talking or Twilio) and its API key — let me know and I'll wire it in.
 
 ## Tech Stack

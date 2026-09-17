@@ -54,3 +54,5 @@ services:
         sync: false
       - key: EMAIL_FROM
         value: FEVA FEST <no-reply@fevafest.co.ke>
+      - key: AFFILIATE_DEFAULT_COMMISSION_PERCENT
+        value: 10

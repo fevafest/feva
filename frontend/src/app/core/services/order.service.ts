@@ -9,6 +9,7 @@ export interface CreateOrderPayload {
   eventId: string;
   items: { ticketTypeId: string; quantity: number }[];
   phoneNumber: string;
+  affiliateCode?: string;
 }
 
 @Injectable({ providedIn: 'root' })

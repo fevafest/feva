@@ -20,10 +20,11 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6, select: false },
     role: {
       type: String,
-      enum: ['customer', 'organizer', 'admin', 'staff'],
+      enum: ['customer', 'organizer', 'admin', 'staff', 'affiliate'],
       default: 'customer',
     },
     organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'Organizer' },
+    affiliate: { type: mongoose.Schema.Types.ObjectId, ref: 'Affiliate' },
     // A superadmin is still role 'admin' but additionally gets to manage other
     // admin accounts and is the only one who can view the Payments section.
     isSuperAdmin: { type: Boolean, default: false },

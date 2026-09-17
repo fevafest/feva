@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
 const { generateOrderNumber, generatePaymentReference } = require('../utils/generateReference');
+const { resolveAffiliateByCode } = require('../services/affiliateService');
 
 const FEE_PERCENT = parseFloat(process.env.PLATFORM_FEE_PERCENT || '0.05');
 const FEE_FIXED = parseFloat(process.env.PLATFORM_FEE_FIXED || '0');
@@ -20,7 +21,7 @@ function computeTotals(items) {
  * payment via the callback (see paymentController).
  */
 const createOrder = asyncHandler(async (req, res) => {
-  const { eventId, items, phoneNumber } = req.body;
+  const { eventId, items, phoneNumber, affiliateCode } = req.body;
 
   if (!eventId || !Array.isArray(items) || items.length === 0 || !phoneNumber) {
     throw new ApiError(400, 'Event, ticket selection and phone number are required.');
@@ -29,6 +30,14 @@ const createOrder = asyncHandler(async (req, res) => {
   const event = await Event.findById(eventId);
   if (!event || event.status !== 'published') {
     throw new ApiError(404, 'Event not available for purchase.');
+  }
+
+  // An unknown/expired/invalid ref code just means no attribution — it must
+  // never block the purchase itself. Self-referrals (an affiliate buying
+  // with their own code) are silently ignored too.
+  let affiliate = await resolveAffiliateByCode(affiliateCode);
+  if (affiliate && String(affiliate.user) === String(req.user._id)) {
+    affiliate = null;
   }
 
   const orderItems = [];
@@ -60,6 +69,8 @@ const createOrder = asyncHandler(async (req, res) => {
     orderNumber: generateOrderNumber(),
     user: req.user._id,
     event: event._id,
+    affiliate: affiliate ? affiliate._id : undefined,
+    affiliateCode: affiliate ? affiliate.code : undefined,
     items: orderItems,
     quantity: totalQuantity,
     subtotal,
