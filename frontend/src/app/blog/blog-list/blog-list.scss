@@ -40,7 +40,7 @@
     object-fit: cover;
   }
   &.placeholder {
-    background: linear-gradient(135deg, #2c1416, #3a1418);
+    background: linear-gradient(135deg, var(--color-black), var(--color-primary-dark));
   }
 }
 

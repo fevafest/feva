@@ -1,26 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --color-primary: #e21221;
-  --color-primary-dark: #b80d1c;
-  --color-primary-light: #ff4757;
-  --color-black: #14141a;
-  --color-dark-gray: #3a3a42;
-  --color-gray: #6b7280;
-  --color-light-gray: #f4f4f6;
-  --color-border: #e6e6ea;
-  --color-white: #ffffff;
+  /* Poster palette: burnt orange, near-black, cream */
+  --color-primary: #f2540c;
+  --color-primary-dark: #c73f06;
+  --color-primary-light: #ff8144;
+  --color-black: #14110d;
+  --color-ink: #1c1712;
+  --color-dark-gray: #423a30;
+  --color-gray: #8a7c66;
+  --color-light-gray: #ece1c8;
+  --color-cream: #f2e8cf;
+  --color-border: #d9c9a3;
+  --color-white: #fffbf2;
 
-  --font-heading: 'Poppins', sans-serif;
+  --font-display: 'Anton', sans-serif;
+  --font-heading: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
 
-  --shadow-sm: 0 1px 3px rgba(20, 20, 26, 0.08);
-  --shadow-md: 0 8px 24px rgba(20, 20, 26, 0.1);
-  --shadow-lg: 0 16px 40px rgba(20, 20, 26, 0.14);
+  --shadow-sm: 0 1px 3px rgba(20, 17, 13, 0.15);
+  --shadow-md: 6px 6px 0 rgba(20, 17, 13, 0.9);
+  --shadow-lg: 10px 10px 0 rgba(20, 17, 13, 0.9);
 
   --header-height: 76px;
   --max-width: 1280px;
@@ -44,6 +48,22 @@ body {
   background: var(--color-white);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  position: relative;
+}
+
+/* Grain / vintage texture, laid over the entire site. Fixed + pointer-events
+   none so it never interferes with clicks, and mix-blend-mode so it reads as
+   texture rather than a flat overlay on top of photography and colour blocks
+   alike. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 h1,
@@ -52,9 +72,10 @@ h3,
 h4,
 h5 {
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
   margin: 0 0 0.5em;
-  letter-spacing: -0.01em;
 }
 
 p {
@@ -82,52 +103,91 @@ button {
   padding: 0 20px;
 }
 
+/* Poster-style display type: huge, chunky, slightly skewed, with a
+   misregistered second colour layer behind it — the classic screen-print
+   look, done in pure CSS so it stays crisp text (selectable, accessible)
+   rather than a flattened image. */
+.poster-type {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  line-height: 0.85;
+  color: var(--color-black);
+  transform: skewX(-4deg);
+
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    z-index: -1;
+    color: var(--color-primary);
+  }
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 24px;
+  padding: 13px 26px;
   border-radius: var(--radius-sm);
-  border: none;
+  border: 2px solid var(--color-black);
+  font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--color-black);
+}
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--color-black);
+}
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--color-black);
 }
 
 .btn-primary {
   background: var(--color-primary);
   color: var(--color-white);
+  border-color: var(--color-black);
 }
 .btn-primary:hover {
   background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 .btn-primary:disabled {
-  background: #f0a5aa;
+  background: #e2b596;
+  color: #fff;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
+  box-shadow: 3px 3px 0 var(--color-black);
+  opacity: 0.7;
 }
 
 .btn-outline {
-  background: transparent;
+  background: var(--color-white);
   color: var(--color-black);
-  border: 1.5px solid var(--color-border);
+  border: 2px solid var(--color-black);
 }
 .btn-outline:hover {
-  border-color: var(--color-black);
+  background: var(--color-cream);
 }
 
 .btn-dark {
   background: var(--color-black);
   color: var(--color-white);
+  border-color: var(--color-black);
+  box-shadow: 3px 3px 0 var(--color-primary);
 }
 .btn-dark:hover {
   background: #000;
+  box-shadow: 5px 5px 0 var(--color-primary);
 }
 
 .btn-block {
@@ -135,14 +195,18 @@ button {
 }
 
 .btn-sm {
-  padding: 8px 16px;
-  font-size: 0.85rem;
+  padding: 9px 18px;
+  font-size: 0.78rem;
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+.btn-sm:hover {
+  box-shadow: 4px 4px 0 var(--color-black);
 }
 
 .card {
   background: var(--color-white);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-black);
   box-shadow: var(--shadow-sm);
 }
 
@@ -151,27 +215,28 @@ button {
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
+  border-radius: 3px;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 .badge-red {
-  background: rgba(226, 18, 33, 0.1);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 .badge-green {
-  background: rgba(22, 163, 74, 0.12);
+  background: rgba(22, 163, 74, 0.14);
   color: #16a34a;
 }
 .badge-amber {
-  background: rgba(217, 119, 6, 0.12);
-  color: #d97706;
+  background: rgba(217, 119, 6, 0.14);
+  color: #a15c04;
 }
 .badge-gray {
-  background: rgba(107, 114, 128, 0.12);
-  color: var(--color-gray);
+  background: rgba(66, 58, 48, 0.1);
+  color: var(--color-dark-gray);
 }
 
 .form-group {
@@ -179,8 +244,11 @@ button {
 }
 .form-label {
   display: block;
-  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   margin-bottom: 6px;
   color: var(--color-dark-gray);
 }
@@ -188,9 +256,9 @@ button {
   width: 100%;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--color-border);
+  border: 2px solid var(--color-border);
   font-size: 0.95rem;
-  font-family: inherit;
+  font-family: var(--font-body);
   background: var(--color-white);
   transition: border-color 0.15s ease;
 }
@@ -222,6 +290,18 @@ button {
 }
 .section-title {
   font-size: 1.6rem;
+}
+
+/* Scroll-reveal: elements start hidden/offset and are revealed by
+   ScrollRevealDirective toggling .is-visible once they enter the viewport. */
+[appScrollReveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[appScrollReveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (max-width: 768px) {

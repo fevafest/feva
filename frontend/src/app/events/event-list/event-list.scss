@@ -1,15 +1,20 @@
 .events-header {
-  background: var(--color-light-gray);
-  padding: 40px 0 28px;
+  background: var(--color-black);
+  padding: 44px 0 32px;
   margin-bottom: 28px;
+  position: relative;
 
   h1 {
-    font-size: 1.8rem;
+    color: var(--color-white);
+    font-size: 1.9rem;
     margin-bottom: 6px;
   }
   p {
-    color: var(--color-gray);
+    color: var(--color-cream);
+    opacity: 0.75;
     margin-bottom: 20px;
+    text-transform: none;
+    font-family: var(--font-body);
   }
 }
 
@@ -17,11 +22,11 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  background: white;
+  background: var(--color-cream);
   padding: 10px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-black);
+  box-shadow: 4px 4px 0 var(--color-primary);
 }
 
 .search-field {
@@ -40,6 +45,7 @@
     font-size: 0.92rem;
     color: var(--color-black);
     font-family: inherit;
+    background: transparent;
   }
 }
 
@@ -56,18 +62,28 @@
 
 .category-chip {
   flex-shrink: 0;
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
+  background: var(--color-white);
+  border: 2px solid var(--color-black);
+  border-radius: 3px;
   padding: 9px 18px;
-  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-dark-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-black);
+  box-shadow: 2px 2px 0 var(--color-black);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0 var(--color-black);
+  }
 
   &.active {
     background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
+    border-color: var(--color-black);
+    color: var(--color-white);
   }
 }
 
@@ -88,16 +104,17 @@
 .page-btn {
   width: 38px;
   height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  background: white;
+  border-radius: 3px;
+  border: 2px solid var(--color-black);
+  background: var(--color-white);
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.88rem;
+  box-shadow: 2px 2px 0 var(--color-black);
 
   &.active {
     background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
+    color: var(--color-white);
   }
 }
 

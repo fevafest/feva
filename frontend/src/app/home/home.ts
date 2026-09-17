@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -7,13 +7,26 @@ import { FevaEvent, EVENT_CATEGORIES } from '../core/models/event.model';
 import { EventCardComponent } from '../shared/components/event-card/event-card';
 import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner';
 import { IconComponent } from '../shared/components/icon/icon';
+import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
+import { SkylineSilhouetteComponent } from '../shared/components/skyline-silhouette/skyline-silhouette';
+import { CrowdSilhouetteComponent } from '../shared/components/crowd-silhouette/crowd-silhouette';
 
 type SearchTab = 'events' | 'flights' | 'holidays';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, EventCardComponent, LoadingSpinnerComponent, IconComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    EventCardComponent,
+    LoadingSpinnerComponent,
+    IconComponent,
+    ScrollRevealDirective,
+    SkylineSilhouetteComponent,
+    CrowdSilhouetteComponent,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -29,6 +42,9 @@ export class HomeComponent implements OnInit {
   readonly upcomingEvents = signal<FevaEvent[]>([]);
   readonly loadingFeatured = signal(true);
   readonly loadingUpcoming = signal(true);
+
+  /** Subtle parallax offset for the hero skyline layer, driven by scroll. */
+  readonly heroOffset = signal(0);
 
   readonly searchForm = this.fb.nonNullable.group({
     search: [''],
@@ -51,6 +67,11 @@ export class HomeComponent implements OnInit {
       },
       error: () => this.loadingUpcoming.set(false),
     });
+  }
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.heroOffset.set(Math.min(window.scrollY * 0.25, 120));
   }
 
   setTab(tab: SearchTab): void {

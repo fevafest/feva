@@ -2,8 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-black);
+  border-bottom: 3px solid var(--color-primary);
   height: var(--header-height);
 }
 
@@ -16,35 +16,40 @@
 }
 
 .brand {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
   flex-shrink: 0;
+  letter-spacing: 0.01em;
+  transform: skewX(-4deg);
+  display: inline-block;
 }
 .brand-mark {
   color: var(--color-primary);
 }
 .brand-mark-alt {
-  color: var(--color-black);
+  color: var(--color-white);
 }
 
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 30px;
   flex: 1;
   justify-content: center;
 
   a {
+    font-family: var(--font-heading);
     font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--color-dark-gray);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-cream);
     padding: 8px 0;
     position: relative;
   }
   a.active,
   a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-light);
   }
 }
 
@@ -55,17 +60,20 @@
 }
 
 .action-link {
+  font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--color-dark-gray);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-cream);
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-light);
   }
 }
 
 .sell-btn {
   padding: 10px 18px;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
 }
 
 .account-wrap {
@@ -77,12 +85,15 @@
   gap: 8px;
   background: transparent;
   border: none;
+  font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: var(--color-cream);
   padding: 6px;
   border-radius: var(--radius-sm);
   &:hover {
-    background: var(--color-light-gray);
+    background: rgba(255, 255, 255, 0.08);
   }
 }
 .avatar-circle {
@@ -90,22 +101,23 @@
   height: 30px;
   border-radius: 50%;
   background: var(--color-primary);
-  color: white;
+  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
+  border: 2px solid var(--color-black);
 }
 .account-dropdown {
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  background: white;
-  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  border: 2px solid var(--color-black);
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
+  box-shadow: 4px 4px 0 var(--color-black);
   min-width: 180px;
   padding: 6px;
   display: flex;
@@ -117,12 +129,14 @@
     background: none;
     border: none;
     padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border-radius: 3px;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    text-transform: uppercase;
     font-weight: 500;
     color: var(--color-black);
     &:hover {
-      background: var(--color-light-gray);
+      background: var(--color-cream);
     }
   }
 }
@@ -141,7 +155,7 @@
   span {
     display: block;
     height: 2px;
-    background: var(--color-black);
+    background: var(--color-cream);
     border-radius: 2px;
     transition: all 0.2s ease;
   }
@@ -161,11 +175,11 @@
 }
 .nav-divider {
   height: 1px;
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.15);
   margin: 6px 0;
 }
 .logout-link {
-  color: var(--color-primary) !important;
+  color: var(--color-primary-light) !important;
 }
 
 @media (max-width: 900px) {
@@ -175,7 +189,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: white;
+    background: var(--color-black);
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
@@ -187,7 +201,7 @@
 
     a {
       padding: 14px 4px;
-      border-bottom: 1px solid var(--color-light-gray);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
   }
   .main-nav.open {

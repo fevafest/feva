@@ -1,17 +1,17 @@
 .event-card {
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
+  background: var(--color-black);
+  border: 2px solid var(--color-black);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 5px 5px 0 var(--color-primary);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--color-primary);
 
     .poster-wrap img {
       transform: scale(1.05);
@@ -23,7 +23,7 @@
   position: relative;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: var(--color-light-gray);
+  background: var(--color-dark-gray);
 
   img {
     width: 100%;
@@ -31,15 +31,22 @@
     object-fit: cover;
     transition: transform 0.35s ease;
   }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(20, 17, 13, 0.85));
+  }
 }
 
 .category-badge {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(20, 20, 26, 0.75);
-  color: white;
-  backdrop-filter: blur(4px);
+  z-index: 2;
+  transform: rotate(-2deg);
+  border: 2px solid var(--color-black);
 }
 
 .card-body {
@@ -47,38 +54,43 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  background: var(--color-black);
 }
 
 .date-line {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-primary-light);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   margin-bottom: 8px;
 }
 
 .event-title {
+  font-family: var(--font-heading);
   font-size: 1.05rem;
+  color: var(--color-white);
   margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.6em;
+  min-height: 2.5em;
 }
 
 .venue-line {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--color-gray);
-  font-size: 0.85rem;
+  color: var(--color-cream);
+  opacity: 0.7;
+  font-size: 0.82rem;
   margin-bottom: 16px;
 
   svg {
     flex-shrink: 0;
-    color: var(--color-gray);
+    color: var(--color-primary-light);
   }
   span {
     overflow: hidden;
@@ -93,20 +105,34 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid var(--color-light-gray);
+  border-top: 1px dashed rgba(242, 232, 207, 0.25);
 }
 
 .price {
-  font-size: 0.85rem;
-  color: var(--color-dark-gray);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--color-cream);
+  text-transform: uppercase;
 
   strong {
     font-size: 1rem;
-    color: var(--color-black);
+    color: var(--color-white);
   }
   &.free {
-    color: var(--color-primary);
-    font-weight: 800;
+    color: var(--color-primary-light);
+    font-weight: 700;
     font-size: 0.95rem;
+  }
+}
+
+.card-footer .btn-outline {
+  background: transparent;
+  color: var(--color-white);
+  border-color: var(--color-cream);
+  box-shadow: none;
+
+  &:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
   }
 }

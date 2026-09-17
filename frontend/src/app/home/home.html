@@ -1,11 +1,23 @@
 <section class="hero">
-  <div class="hero-overlay"></div>
+  <div class="hero-skyline" [style.transform]="'translateY(' + heroOffset() + 'px)'">
+    <app-skyline-silhouette color="rgba(0,0,0,0.55)" />
+  </div>
+
+  <div class="hero-spotlights" aria-hidden="true">
+    <span class="beam beam-1"></span>
+    <span class="beam beam-2"></span>
+    <span class="beam beam-3"></span>
+  </div>
+
   <div class="container hero-content">
-    <div class="hero-text">
-      <span class="badge badge-red hero-eyebrow">Kenya's Event Marketplace</span>
-      <h1>Find Your Next Unforgettable Experience</h1>
-      <p>Discover concerts, festivals, comedy nights and more &mdash; book tickets in minutes with M-Pesa.</p>
-    </div>
+    <span class="badge badge-red hero-eyebrow">Nairobi &middot; Live &amp; Loud</span>
+
+    <h1 class="hero-wordmark">
+      <span class="poster-type" data-text="FEVA">FEVA</span>
+      <span class="poster-type outline" data-text="FEST">FEST</span>
+    </h1>
+
+    <p class="hero-tagline">Every stage. Every crowd. One tap to get in.</p>
 
     <div class="search-panel card">
       <div class="search-tabs">
@@ -47,6 +59,10 @@
       </div>
     </div>
   </div>
+
+  <div class="hero-crowd" aria-hidden="true">
+    <app-crowd-silhouette color="rgba(20,17,13,0.9)" />
+  </div>
 </section>
 
 <section class="category-strip container">
@@ -55,7 +71,7 @@
   </button>
 </section>
 
-<section class="section container" *ngIf="loadingFeatured() || featuredEvents().length">
+<section class="section container" *ngIf="loadingFeatured() || featuredEvents().length" appScrollReveal>
   <div class="section-header">
     <h2 class="section-title">Featured Events</h2>
     <a routerLink="/events" [queryParams]="{ featured: true }" class="see-all">See all &rarr;</a>
@@ -68,7 +84,7 @@
   </div>
 </section>
 
-<section class="section container">
+<section class="section container" appScrollReveal>
   <div class="section-header">
     <h2 class="section-title">Upcoming Events</h2>
     <a routerLink="/events" class="see-all">See all &rarr;</a>
@@ -81,12 +97,12 @@
   </div>
 </section>
 
-<section class="organizer-cta">
+<section class="organizer-cta" appScrollReveal>
   <div class="container cta-inner">
     <div>
-      <h2>Have an event to promote?</h2>
-      <p>List your event on FEVA FEST and reach thousands of buyers across Kenya.</p>
+      <h2>Got An Event To Promote?</h2>
+      <p>List it on FEVA FEST and put it in front of thousands of buyers across Kenya.</p>
     </div>
-    <a routerLink="/organizer" class="btn btn-dark">Sell Your Event</a>
+    <a routerLink="/organizer" class="btn btn-primary">Sell Your Event</a>
   </div>
 </section>

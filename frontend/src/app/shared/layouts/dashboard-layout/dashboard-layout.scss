@@ -8,7 +8,7 @@
   width: 260px;
   flex-shrink: 0;
   background: var(--color-black);
-  color: #d4d4dc;
+  color: var(--color-cream);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -21,9 +21,9 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   .brand {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.4rem;
   }
   .brand-mark {
     color: var(--color-primary-light);
@@ -36,7 +36,7 @@
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #8b8b93;
+    color: #a89a80;
     margin-top: 4px;
   }
 }
@@ -57,7 +57,7 @@
     border-radius: var(--radius-sm);
     font-size: 0.92rem;
     font-weight: 500;
-    color: #c7c7cf;
+    color: var(--color-cream);
     transition: background 0.15s ease, color 0.15s ease;
 
     &:hover {
@@ -107,7 +107,7 @@
   .user-role {
     font-size: 0.75rem;
     text-transform: capitalize;
-    color: #8b8b93;
+    color: #a89a80;
   }
 }
 
@@ -118,7 +118,7 @@
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
   border: none;
-  color: #d4d4dc;
+  color: var(--color-cream);
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   font-size: 0.88rem;

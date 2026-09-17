@@ -27,7 +27,8 @@
 .banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.55));
+  background: linear-gradient(180deg, rgba(20, 17, 13, 0.1), rgba(20, 17, 13, 0.7));
+  box-shadow: inset 0 -6px 0 var(--color-primary);
 }
 
 .event-layout {
@@ -157,9 +158,10 @@
 }
 .ticket-type-remaining {
   font-size: 0.75rem;
-  color: #d97706;
+  color: var(--color-primary-dark);
   font-weight: 600;
   margin-top: 2px;
+  text-transform: uppercase;
 }
 
 .qty-stepper {
