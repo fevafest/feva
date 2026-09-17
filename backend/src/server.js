@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -8,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 
 const connectDB = require('./config/db');
+const { uploadsRoot } = require('./config/paths');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const { apiLimiter } = require('./middleware/rateLimiter');
 
@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 app.use('/api', apiLimiter);
 
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(uploadsRoot));
 
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'FEVA FEST API is running.', timestamp: new Date() });

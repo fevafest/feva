@@ -3,15 +3,25 @@ services:
     name: feva-fest-api
     runtime: node
     rootDir: backend
-    plan: free
+    plan: free # bump to "starter" or higher to enable the persistent disk below
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
+    # Uncomment once you're on a paid plan (free-tier services can't attach
+    # disks). This gives uploaded event posters/blog covers/avatars a real
+    # persistent volume that survives deploys and restarts, instead of the
+    # ephemeral filesystem. Also set UPLOADS_DIR below to the same mountPath.
+    # disk:
+    #   name: feva-fest-uploads
+    #   mountPath: /var/data/uploads
+    #   sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: CLIENT_URL
         sync: false # set to your Vercel frontend URL, e.g. https://feva-fest.vercel.app
+      # - key: UPLOADS_DIR
+      #   value: /var/data/uploads # only once the disk above is enabled
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

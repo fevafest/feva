@@ -2,8 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { ApiError } = require('../utils/apiResponse');
+const { uploadsRoot } = require('../config/paths');
 
-const uploadsRoot = path.join(__dirname, '..', '..', 'uploads');
 for (const sub of ['events', 'blog', 'avatars', 'organizers']) {
   const dir = path.join(uploadsRoot, sub);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
