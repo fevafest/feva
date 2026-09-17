@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: feva-fest-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URL
+        sync: false # set to your Vercel frontend URL, e.g. https://feva-fest.vercel.app
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: PAYHERO_API_BASE_URL
+        value: https://backend.payhero.co.ke/api/v2
+      - key: PAYHERO_USERNAME
+        sync: false
+      - key: PAYHERO_PASSWORD
+        sync: false
+      - key: PAYHERO_CHANNEL_ID
+        sync: false
+      - key: PAYHERO_CALLBACK_URL
+        sync: false # set to https://<this-service>.onrender.com/api/payments/payhero/callback
+      - key: PLATFORM_FEE_PERCENT
+        value: 0.05
+      - key: PLATFORM_FEE_FIXED
+        value: 0
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_SECURE
+        value: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_FROM
+        value: FEVA FEST <no-reply@fevafest.co.ke>
