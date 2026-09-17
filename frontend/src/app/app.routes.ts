@@ -21,6 +21,7 @@ const organizerNav: DashboardNavItem[] = [
 const adminNav: DashboardNavItem[] = [
   { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true },
   { label: 'Events', path: '/admin/events', icon: 'calendar-event' },
+  { label: 'Create Event', path: '/admin/events/new', icon: 'plus' },
   { label: 'Orders', path: '/admin/orders', icon: 'orders' },
   { label: 'Tickets', path: '/admin/tickets', icon: 'ticket' },
   { label: 'Scanner', path: '/admin/scanner', icon: 'scan' },

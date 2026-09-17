@@ -1,6 +1,11 @@
 <div class="dash-header">
-  <h1>Admin Dashboard</h1>
-  <p>Platform-wide overview of users, events, tickets and revenue.</p>
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>Platform-wide overview of users, events, tickets and revenue.</p>
+  </div>
+  <a routerLink="/admin/events/new" class="btn btn-primary">
+    <app-icon name="plus" [size]="16" /> Create Event
+  </a>
 </div>
 
 <app-loading-spinner *ngIf="loading()" />

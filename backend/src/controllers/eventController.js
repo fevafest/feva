@@ -178,10 +178,26 @@ const adminListEvents = asyncHandler(async (req, res) => {
 
 async function resolveOrganizerId(req) {
   if (req.user.role === 'admin' && req.body.organizer) return req.body.organizer;
-  if (!req.user.organizer) {
-    throw new ApiError(403, 'You must create an organizer profile before adding events.');
+  if (req.user.organizer) return req.user.organizer;
+
+  if (req.user.role === 'admin') {
+    let organizer = await Organizer.findOne({ user: req.user._id });
+    if (!organizer) {
+      organizer = await Organizer.create({
+        user: req.user._id,
+        businessName: req.user.fullName || 'FEVA FEST',
+        contactEmail: req.user.email,
+        contactPhone: req.user.phoneNumber,
+        isApproved: true,
+        isVerified: true,
+      });
+      req.user.organizer = organizer._id;
+      await req.user.save();
+    }
+    return organizer._id;
   }
-  return req.user.organizer;
+
+  throw new ApiError(403, 'You must create an organizer profile before adding events.');
 }
 
 async function assertOwnership(req, event) {
