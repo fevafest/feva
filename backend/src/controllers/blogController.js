@@ -1,6 +1,7 @@
 const BlogPost = require('../models/BlogPost');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
+const { getUploadedUrl } = require('../middleware/upload');
 
 const listPosts = asyncHandler(async (req, res) => {
   const { featured, page = 1, limit = 9 } = req.query;
@@ -48,7 +49,7 @@ const createPost = asyncHandler(async (req, res) => {
     isFeatured: isFeatured === 'true' || isFeatured === true,
     isPublished: isPublished !== 'false' && isPublished !== false,
     author: req.user._id,
-    coverImage: req.file ? `/uploads/blog/${req.file.filename}` : undefined,
+    coverImage: getUploadedUrl(req.file, 'blog'),
   });
 
   return success(res, 201, 'Blog post created.', post);
@@ -65,7 +66,7 @@ const updatePost = asyncHandler(async (req, res) => {
   if (tags) post.tags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : tags;
   if (isFeatured !== undefined) post.isFeatured = isFeatured === 'true' || isFeatured === true;
   if (isPublished !== undefined) post.isPublished = isPublished !== 'false' && isPublished !== false;
-  if (req.file) post.coverImage = `/uploads/blog/${req.file.filename}`;
+  if (req.file) post.coverImage = getUploadedUrl(req.file, 'blog');
 
   await post.save();
   return success(res, 200, 'Blog post updated.', post);

@@ -4,6 +4,7 @@ const Event = require('../models/Event');
 const Order = require('../models/Order');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
+const { getUploadedUrl } = require('../middleware/upload');
 
 /** Registers the current user as an event organizer (pending admin approval). */
 const registerOrganizer = asyncHandler(async (req, res) => {
@@ -21,7 +22,7 @@ const registerOrganizer = asyncHandler(async (req, res) => {
     contactEmail,
     contactPhone,
     website,
-    logo: req.file ? `/uploads/organizers/${req.file.filename}` : undefined,
+    logo: getUploadedUrl(req.file, 'organizers'),
   });
 
   const userUpdates = { organizer: organizer._id };

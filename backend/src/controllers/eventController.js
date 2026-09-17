@@ -2,6 +2,7 @@ const Event = require('../models/Event');
 const Organizer = require('../models/Organizer');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
+const { getUploadedUrl } = require('../middleware/upload');
 
 /** Public: list published events with search, filters and pagination. */
 const listEvents = asyncHandler(async (req, res) => {
@@ -107,7 +108,7 @@ const createEvent = asyncHandler(async (req, res) => {
   const body = { ...req.body, organizer: organizerId };
   if (typeof body.ticketTypes === 'string') body.ticketTypes = JSON.parse(body.ticketTypes);
   if (typeof body.tags === 'string') body.tags = body.tags.split(',').map((t) => t.trim());
-  if (req.file) body.posterImage = `/uploads/events/${req.file.filename}`;
+  if (req.file) body.posterImage = getUploadedUrl(req.file, 'events');
 
   body.status = req.user.role === 'admin' ? 'published' : 'pending_approval';
 
@@ -123,7 +124,7 @@ const updateEvent = asyncHandler(async (req, res) => {
   const body = { ...req.body };
   if (typeof body.ticketTypes === 'string') body.ticketTypes = JSON.parse(body.ticketTypes);
   if (typeof body.tags === 'string') body.tags = body.tags.split(',').map((t) => t.trim());
-  if (req.file) body.posterImage = `/uploads/events/${req.file.filename}`;
+  if (req.file) body.posterImage = getUploadedUrl(req.file, 'events');
 
   Object.assign(event, body);
   await event.save();

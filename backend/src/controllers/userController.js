@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const Ticket = require('../models/Ticket');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
+const { getUploadedUrl } = require('../middleware/upload');
 
 const isRequesterSuperAdmin = (req) => req.user.role === 'admin' && req.user.isSuperAdmin;
 
@@ -25,7 +26,7 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   if (fullName) user.fullName = fullName;
   if (phoneNumber) user.phoneNumber = phoneNumber;
-  if (req.file) user.avatar = `/uploads/avatars/${req.file.filename}`;
+  if (req.file) user.avatar = getUploadedUrl(req.file, 'avatars');
 
   await user.save();
   return success(res, 200, 'Profile updated.', user.toSafeObject());
