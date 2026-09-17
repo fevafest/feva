@@ -60,9 +60,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   dashboardLink(): string {
     const role = this.auth.currentUser()?.role;
     if (role === 'admin') return '/admin';
-    if (role === 'organizer') return '/organizer';
-    if (role === 'affiliate') return '/affiliate';
+    if (role === 'organizer') return '/organizer/dashboard';
+    if (role === 'affiliate') return '/affiliate/dashboard';
     return '/dashboard';
+  }
+
+  isAffiliate(): boolean {
+    const user = this.auth.currentUser();
+    return user?.role === 'affiliate' || Boolean(user?.affiliate);
+  }
+
+  isAdmin(): boolean {
+    return this.auth.currentUser()?.role === 'admin';
+  }
+
+  isOrganizer(): boolean {
+    const user = this.auth.currentUser();
+    return user?.role === 'organizer' || Boolean(user?.organizer);
   }
 
   logout(): void {

@@ -17,24 +17,132 @@
     </div>
 
     <nav class="main-nav" [class.open]="menuOpen()">
+      <!-- Mobile Logged-in User Header Card -->
+      <div class="mobile-user-card mobile-only" *ngIf="auth.isLoggedIn()">
+        <div class="mobile-user-info">
+          <span class="avatar-circle">{{ auth.currentUser()?.fullName?.charAt(0) }}</span>
+          <div class="mobile-user-meta">
+            <span class="mobile-user-name">{{ auth.currentUser()?.fullName }}</span>
+            <span class="mobile-user-role">{{ auth.currentUser()?.role }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-section-title mobile-only">DISCOVER</div>
       <a routerLink="/events" routerLinkActive="active" (click)="closeMenu()">Events</a>
       <a routerLink="/flights" routerLinkActive="active" (click)="closeMenu()">Flights</a>
       <a routerLink="/holidays" routerLinkActive="active" (click)="closeMenu()">Holidays</a>
       <a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a>
 
+      <!-- Portals & Quick Access (Mobile) -->
+      <div class="mobile-only nav-divider"></div>
+      <div class="nav-section-title mobile-only">DASHBOARDS & PORTALS</div>
+
+      <!-- Affiliate Dashboard: Direct, prominent mobile access -->
+      <a
+        *ngIf="isAffiliate() || isAdmin()"
+        routerLink="/affiliate/dashboard"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link affiliate-highlight"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">Affiliate Dashboard</span>
+        <span class="portal-tag">EARN</span>
+      </a>
+
+      <!-- Affiliate Program info for users not yet enrolled -->
+      <a
+        *ngIf="!isAffiliate() && !isAdmin()"
+        routerLink="/affiliate"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">Affiliate Program</span>
+        <span class="portal-tag">COMMISSION</span>
+      </a>
+
+      <!-- Organizer Portal -->
+      <a
+        *ngIf="isOrganizer() || isAdmin()"
+        routerLink="/organizer/dashboard"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">Organizer Dashboard</span>
+      </a>
+      <a
+        *ngIf="!isOrganizer() && !isAdmin()"
+        routerLink="/organizer"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">Sell Your Event</span>
+      </a>
+
+      <!-- Admin Panel (if admin) -->
+      <a
+        *ngIf="isAdmin()"
+        routerLink="/admin"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link admin-highlight"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">Admin Panel</span>
+      </a>
+
+      <!-- Customer Tickets / Orders -->
+      <a
+        *ngIf="auth.isLoggedIn()"
+        routerLink="/dashboard/tickets"
+        routerLinkActive="active"
+        class="mobile-only mobile-portal-link"
+        (click)="closeMenu()"
+      >
+        <span class="portal-link-text">My Tickets & Orders</span>
+      </a>
+
+      <!-- Auth section on mobile -->
       <div class="mobile-only nav-divider"></div>
 
       <ng-container *ngIf="!auth.isLoggedIn()">
-        <a routerLink="/auth/login" class="mobile-only" (click)="closeMenu()">Log In</a>
-        <a routerLink="/auth/register" class="mobile-only" (click)="closeMenu()">Sign Up</a>
+        <div class="mobile-auth-btns mobile-only">
+          <a routerLink="/auth/login" class="mobile-btn mobile-btn-outline" (click)="closeMenu()">Log In</a>
+          <a routerLink="/auth/register" class="mobile-btn mobile-btn-primary" (click)="closeMenu()">Sign Up</a>
+        </div>
       </ng-container>
+
       <ng-container *ngIf="auth.isLoggedIn()">
-        <a [routerLink]="dashboardLink()" class="mobile-only" (click)="closeMenu()">Dashboard</a>
-        <a (click)="logout(); closeMenu()" class="mobile-only logout-link">Logout</a>
+        <div class="mobile-auth-footer mobile-only">
+          <a routerLink="/dashboard/profile" class="mobile-footer-link" (click)="closeMenu()">Profile Settings</a>
+          <button (click)="logout(); closeMenu()" class="mobile-footer-logout">Log Out</button>
+        </div>
       </ng-container>
     </nav>
 
+    <!-- Mobile Backdrop -->
+    <div class="mobile-nav-backdrop mobile-only" *ngIf="menuOpen()" (click)="closeMenu()"></div>
+
     <div class="header-actions">
+      <!-- Desktop Affiliate Quick Link -->
+      <a
+        *ngIf="isAffiliate() || isAdmin()"
+        routerLink="/affiliate/dashboard"
+        class="action-link desktop-only affiliate-action-pill"
+        title="Affiliate Dashboard"
+      >
+        Affiliate
+      </a>
+      <a
+        *ngIf="!isAffiliate() && !isAdmin()"
+        routerLink="/affiliate"
+        class="action-link desktop-only"
+      >
+        Affiliates
+      </a>
+
       <a routerLink="/help" class="action-link desktop-only">Help</a>
 
       <ng-container *ngIf="!auth.isLoggedIn()">
@@ -47,7 +155,10 @@
           <span>{{ auth.currentUser()?.fullName?.split(' ')?.[0] }}</span>
         </button>
         <div class="account-dropdown" *ngIf="accountMenuOpen()">
-          <a [routerLink]="dashboardLink()" (click)="toggleAccountMenu()">Dashboard</a>
+          <a [routerLink]="dashboardLink()" (click)="toggleAccountMenu()">Main Dashboard</a>
+          <a *ngIf="isAffiliate() || isAdmin()" routerLink="/affiliate/dashboard" (click)="toggleAccountMenu()">Affiliate Dashboard</a>
+          <a *ngIf="isOrganizer() || isAdmin()" routerLink="/organizer/dashboard" (click)="toggleAccountMenu()">Organizer Dashboard</a>
+          <a *ngIf="isAdmin()" routerLink="/admin" (click)="toggleAccountMenu()">Admin Dashboard</a>
           <a routerLink="/dashboard/profile" (click)="toggleAccountMenu()">Profile</a>
           <button (click)="logout()">Logout</button>
         </div>

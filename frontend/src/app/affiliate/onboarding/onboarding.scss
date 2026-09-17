@@ -1,10 +1,10 @@
 .onboarding-page {
   min-height: calc(100vh - var(--header-height));
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: var(--color-light-gray);
-  padding: 40px 20px;
+  padding: 32px 16px 60px;
 }
 
 .onboarding-card {
@@ -62,7 +62,17 @@ form {
 }
 
 @media (max-width: 480px) {
+  .onboarding-page {
+    padding: 20px 14px;
+  }
+  .onboarding-card {
+    padding: 26px 18px;
+  }
+  h1 {
+    font-size: 1.25rem;
+  }
   .form-row {
     grid-template-columns: 1fr;
+    gap: 0;
   }
 }

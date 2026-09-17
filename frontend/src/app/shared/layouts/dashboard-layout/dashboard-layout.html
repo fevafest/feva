@@ -39,12 +39,15 @@
 
   <div class="dashboard-main">
     <header class="dashboard-topbar">
-      <button class="menu-btn" (click)="toggleSidebar()">
-        <app-icon name="menu" [size]="22" />
-      </button>
+      <div class="topbar-left">
+        <button class="menu-btn" (click)="toggleSidebar()" aria-label="Toggle navigation">
+          <app-icon name="menu" [size]="20" />
+        </button>
+        <span class="mobile-portal-title">{{ portalName }}</span>
+      </div>
       <a routerLink="/" class="back-link">
-        <app-icon name="arrow-right" [size]="16" />
-        <span>Back to site</span>
+        <app-icon name="arrow-right" [size]="15" />
+        <span>Exit Portal</span>
       </a>
     </header>
 

@@ -49,4 +49,23 @@ export class AffiliateDashboardComponent implements OnInit {
       })
       .catch(() => this.notify.error('Could not copy link. Please copy it manually.'));
   }
+
+  canShare(): boolean {
+    return typeof navigator !== 'undefined' && Boolean(navigator.share);
+  }
+
+  share(): void {
+    if (!this.shareLink) return;
+    if (this.canShare()) {
+      navigator
+        .share({
+          title: 'FEVA FEST Tickets',
+          text: `Check out upcoming events on FEVA FEST and get tickets with my link:`,
+          url: this.shareLink,
+        })
+        .catch(() => {});
+    } else {
+      this.copyLink();
+    }
+  }
 }

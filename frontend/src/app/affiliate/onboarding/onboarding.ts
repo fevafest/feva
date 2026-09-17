@@ -37,6 +37,9 @@ export class AffiliateOnboardingComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
     if (this.auth.currentUser()?.role === 'affiliate') {
       this.router.navigateByUrl('/affiliate/dashboard');
     }

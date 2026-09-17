@@ -140,3 +140,16 @@
     border-color: var(--color-primary);
   }
 }
+
+@media (max-width: 480px) {
+  .card-body {
+    padding: 14px;
+  }
+  .event-title {
+    font-size: 1.05rem;
+    min-height: auto;
+  }
+  .venue-line {
+    margin-bottom: 12px;
+  }
+}

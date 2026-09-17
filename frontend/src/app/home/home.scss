@@ -1,4 +1,4 @@
-﻿.hero {
+.hero {
   position: relative;
   min-height: 640px;
   display: flex;
@@ -523,7 +523,9 @@
 
 @media (max-width: 480px) {
   .event-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
   }
   .search-tabs button span {
     display: none;

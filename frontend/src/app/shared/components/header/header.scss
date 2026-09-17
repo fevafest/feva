@@ -264,38 +264,229 @@
 }
 .nav-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 6px 0;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 12px 0 6px;
 }
-.logout-link {
+.nav-section-title {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-gray);
+  text-transform: uppercase;
+  margin: 10px 0 6px 2px;
+}
+
+.affiliate-action-pill {
+  padding: 5px 12px !important;
+  background: rgba(242, 84, 12, 0.14) !important;
+  border: 1px solid var(--color-primary);
+  border-radius: 4px;
   color: var(--color-primary-light) !important;
+  transition: all 0.2s ease;
+  &:hover {
+    background: var(--color-primary) !important;
+    color: #fff !important;
+  }
 }
 
 @media (max-width: 900px) {
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: var(--header-height);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 98;
+  }
+
   .main-nav {
     position: fixed;
     top: var(--header-height);
-    left: 0;
     right: 0;
     bottom: 0;
-    background: var(--color-black);
+    width: min(340px, 86vw);
+    background: #14110d;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 20px 24px;
-    gap: 4px;
+    padding: 20px 20px 32px;
+    gap: 2px;
     transform: translateX(100%);
-    transition: transform 0.25s ease;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     overflow-y: auto;
+    z-index: 99;
 
-    a {
-      padding: 14px 4px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    a:not(.mobile-btn):not(.mobile-portal-link) {
+      padding: 12px 10px;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      color: var(--color-cream);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--color-primary-light);
+      }
+      &.active {
+        color: var(--color-primary-light);
+        background: rgba(242, 84, 12, 0.08);
+      }
     }
   }
+
   .main-nav.open {
     transform: translateX(0);
   }
+
+  /* User Info Card at top of Mobile Drawer */
+  .mobile-user-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mobile-user-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+  .mobile-user-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mobile-user-role {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-primary-light);
+  }
+
+  /* Portal Links inside Drawer */
+  .mobile-portal-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    text-decoration: none;
+    font-size: 0.88rem !important;
+    font-weight: 600;
+    color: var(--color-white) !important;
+    transition: all 0.2s ease;
+
+    &:hover,
+    &.active {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.affiliate-highlight {
+      border-color: rgba(242, 84, 12, 0.4);
+      background: rgba(242, 84, 12, 0.08);
+      &:hover,
+      &.active {
+        border-color: var(--color-primary);
+        background: rgba(242, 84, 12, 0.16);
+      }
+    }
+
+    &.admin-highlight {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .portal-tag {
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    background: var(--color-primary);
+    color: #000;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Mobile Auth Action Buttons */
+  .mobile-auth-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .mobile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    text-align: center;
+  }
+  .mobile-btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(242, 84, 12, 0.35);
+  }
+  .mobile-btn-outline {
+    background: transparent;
+    color: var(--color-cream);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .mobile-auth-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 8px;
+  }
+  .mobile-footer-link {
+    font-size: 0.82rem;
+    color: var(--color-gray) !important;
+    text-decoration: none;
+    padding: 6px 0 !important;
+    border: none !important;
+    &:hover {
+      color: var(--color-cream) !important;
+    }
+  }
+  .mobile-footer-logout {
+    background: none;
+    border: none;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary-light);
+    cursor: pointer;
+    padding: 6px 0;
+  }
+
   .desktop-only {
     display: none;
   }
@@ -312,7 +503,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 7px 16px;
+    padding: 8px 16px;
     background: #0A0A0C;
     border-bottom: 2px solid var(--color-primary);
     text-decoration: none;
@@ -328,7 +519,7 @@
     }
     .promo-text {
       color: var(--color-white);
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
@@ -347,3 +538,4 @@
     background: var(--color-primary-dark);
   }
 }
+
