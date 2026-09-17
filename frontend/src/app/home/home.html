@@ -65,6 +65,46 @@
   </div>
 </section>
 
+<!-- ───── PROMOTED EVENTS BILLBOARD ───── -->
+<section class="promoted-billboard" *ngIf="promotedEvents().length">
+  <div class="billboard-label">
+    <span class="billboard-label-text">Now Showing</span>
+    <span class="billboard-pulse"></span>
+  </div>
+
+  <a
+    class="billboard-slide"
+    [class.fading]="billboardFading()"
+    [routerLink]="['/events', activeBillboardEvent()!.slug]"
+    *ngIf="activeBillboardEvent() as event"
+  >
+    <img
+      [src]="event.posterImage | fileUrl"
+      [alt]="event.title"
+      class="billboard-img"
+    />
+    <div class="billboard-overlay">
+      <div class="billboard-overlay-inner container">
+        <span class="badge badge-red billboard-category">{{ event.category }}</span>
+        <h2 class="billboard-title">{{ event.title }}</h2>
+        <p class="billboard-meta">{{ event.venue }}&nbsp;&nbsp;&middot;&nbsp;&nbsp;{{ event.location }}</p>
+        <span class="btn btn-primary billboard-cta">Get Tickets</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Nav dots -->
+  <div class="billboard-dots" *ngIf="promotedEvents().length > 1">
+    <button
+      *ngFor="let e of promotedEvents(); let i = index"
+      class="billboard-dot"
+      [class.active]="activeBillboardIndex() === i"
+      (click)="goToBillboardSlide(i)"
+      [attr.aria-label]="'Go to slide ' + (i + 1)"
+    ></button>
+  </div>
+</section>
+
 <section class="category-strip container">
   <button class="category-chip" *ngFor="let cat of categories" (click)="goToCategory(cat)">
     {{ cat }}
@@ -106,3 +146,4 @@
     <a routerLink="/organizer" class="btn btn-primary">Sell Your Event</a>
   </div>
 </section>
+

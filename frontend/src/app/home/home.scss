@@ -1,4 +1,4 @@
-.hero {
+﻿.hero {
   position: relative;
   min-height: 640px;
   display: flex;
@@ -201,6 +201,149 @@
   }
 }
 
+/* â”€â”€â”€ PROMOTED BILLBOARD â”€â”€â”€ */
+.promoted-billboard {
+  position: relative;
+  background: var(--color-ink);
+  margin-top: -2px;
+}
+
+.billboard-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--color-primary);
+}
+
+.billboard-label-text {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+}
+
+.billboard-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-white);
+  flex-shrink: 0;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.65); }
+}
+
+.billboard-slide {
+  display: block;
+  position: relative;
+  width: 100%;
+  /* Tall enough to show the full banner without any cropping */
+  max-height: 78vh;
+  overflow: hidden;
+  transition: opacity 0.45s ease;
+
+  &.fading {
+    opacity: 0;
+  }
+}
+
+.billboard-img {
+  width: 100%;
+  height: auto;
+  max-height: 78vh;
+  /* CONTAIN: show the entire uploaded banner, never crop edges */
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  background: var(--color-ink);
+}
+
+.billboard-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 17, 13, 0.92) 0%,
+    rgba(20, 17, 13, 0.45) 40%,
+    transparent 65%
+  );
+  display: flex;
+  align-items: flex-end;
+}
+
+.billboard-overlay-inner {
+  padding-bottom: 36px;
+  padding-top: 24px;
+}
+
+.billboard-category {
+  margin-bottom: 10px;
+  transform: rotate(-1deg);
+}
+
+.billboard-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+  color: var(--color-white);
+  line-height: 1;
+  margin-bottom: 8px;
+  text-shadow: 3px 3px 0 var(--color-primary);
+  max-width: 700px;
+}
+
+.billboard-meta {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  color: var(--color-cream);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+  opacity: 0.85;
+}
+
+.billboard-cta {
+  pointer-events: none;
+}
+
+/* Nav dots */
+.billboard-dots {
+  position: absolute;
+  bottom: 16px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.billboard-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+
+  &.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: scale(1.3);
+  }
+
+  &:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* â”€â”€â”€ CATEGORY STRIP â”€â”€â”€ */
 .category-strip {
   display: flex;
   gap: 12px;
@@ -213,6 +356,11 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* When the billboard is present the strip shouldn't negative-margin over it */
+.promoted-billboard + .category-strip {
+  margin-top: 0;
 }
 
 .category-chip {
@@ -297,7 +445,7 @@
   p {
     color: var(--color-cream);
     margin: 0;
-    font-family: var(--font-body);
+    font-family: var(--font-body);;
     text-transform: none;
   }
 }
@@ -318,8 +466,6 @@
   .hero {
     min-height: auto;
     padding: 48px 0 96px;
-    /* A gentler, shorter torn edge on mobile so the crowd/skyline don't get
-       awkwardly sliced by a jagged edge tuned for a much taller hero. */
     clip-path: polygon(
       0 0,
       100% 0,
@@ -351,6 +497,9 @@
     margin-top: -40px;
     gap: 8px;
   }
+  .promoted-billboard + .category-strip {
+    margin-top: 0;
+  }
   .hero-skyline {
     bottom: 34px;
     height: 90px;
@@ -362,6 +511,13 @@
     text-align: center;
     justify-content: center;
     padding: 40px 20px;
+  }
+  .billboard-title {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+  }
+  .billboard-dots {
+    bottom: 10px;
+    right: 12px;
   }
 }
 
@@ -382,4 +538,8 @@
   .beam-3 {
     display: none;
   }
+  .billboard-overlay-inner {
+    padding-bottom: 52px;
+  }
 }
+

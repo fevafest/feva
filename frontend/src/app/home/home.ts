@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { IconComponent } from '../shared/components/icon/icon';
 import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.directive';
 import { SkylineSilhouetteComponent } from '../shared/components/skyline-silhouette/skyline-silhouette';
 import { CrowdSilhouetteComponent } from '../shared/components/crowd-silhouette/crowd-silhouette';
+import { FileUrlPipe } from '../shared/pipes/file-url.pipe';
 
 type SearchTab = 'events' | 'flights' | 'holidays';
 
@@ -26,11 +27,12 @@ type SearchTab = 'events' | 'flights' | 'holidays';
     ScrollRevealDirective,
     SkylineSilhouetteComponent,
     CrowdSilhouetteComponent,
+    FileUrlPipe,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly eventService = inject(EventService);
   private readonly router = inject(Router);
@@ -40,8 +42,18 @@ export class HomeComponent implements OnInit {
 
   readonly featuredEvents = signal<FevaEvent[]>([]);
   readonly upcomingEvents = signal<FevaEvent[]>([]);
+  readonly promotedEvents = signal<FevaEvent[]>([]);
   readonly loadingFeatured = signal(true);
   readonly loadingUpcoming = signal(true);
+
+  /** Promoted billboard cycling state. */
+  readonly activeBillboardIndex = signal(0);
+  readonly activeBillboardEvent = computed(
+    () => this.promotedEvents()[this.activeBillboardIndex()] ?? null
+  );
+  readonly billboardFading = signal(false);
+
+  private billboardTimer?: ReturnType<typeof setInterval>;
 
   /** Subtle parallax offset for the hero skyline layer, driven by scroll. */
   readonly heroOffset = signal(0);
@@ -52,6 +64,16 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.eventService.list({ promoted: true, limit: 8 }).subscribe({
+      next: (res) => {
+        this.promotedEvents.set(res.data ?? []);
+        if ((res.data ?? []).length > 1) {
+          this.startBillboardCycle();
+        }
+      },
+      error: () => this.promotedEvents.set([]),
+    });
+
     this.eventService.list({ featured: true, limit: 6 }).subscribe({
       next: (res) => {
         this.featuredEvents.set(res.data ?? []);
@@ -67,6 +89,33 @@ export class HomeComponent implements OnInit {
       },
       error: () => this.loadingUpcoming.set(false),
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.billboardTimer) clearInterval(this.billboardTimer);
+  }
+
+  private startBillboardCycle(): void {
+    this.billboardTimer = setInterval(() => {
+      this.billboardFading.set(true);
+      setTimeout(() => {
+        this.activeBillboardIndex.update(
+          (i) => (i + 1) % this.promotedEvents().length
+        );
+        this.billboardFading.set(false);
+      }, 450);
+    }, 5000);
+  }
+
+  goToBillboardSlide(index: number): void {
+    if (index === this.activeBillboardIndex()) return;
+    if (this.billboardTimer) clearInterval(this.billboardTimer);
+    this.billboardFading.set(true);
+    setTimeout(() => {
+      this.activeBillboardIndex.set(index);
+      this.billboardFading.set(false);
+      this.startBillboardCycle();
+    }, 350);
   }
 
   @HostListener('window:scroll')

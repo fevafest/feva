@@ -21,14 +21,17 @@
 
 .poster-wrap {
   position: relative;
-  aspect-ratio: 3 / 2;
+  /* Tall enough to show portrait or landscape banners without crop */
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: var(--color-dark-gray);
+  background: var(--color-black);
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* contain: show the full uploaded banner — no cropping ever */
+    object-fit: contain;
+    object-position: center;
     transition: transform 0.35s ease;
   }
 
@@ -37,6 +40,7 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, transparent 55%, rgba(20, 17, 13, 0.85));
+    pointer-events: none;
   }
 }
 
