@@ -44,7 +44,11 @@ const registerAffiliate = asyncHandler(async (req, res) => {
     defaultCommissionPercent: settings.affiliateDefaultCommissionPercent,
   });
 
-  await User.findByIdAndUpdate(req.user._id, { role: 'affiliate', affiliate: affiliate._id });
+  const userUpdates = { affiliate: affiliate._id };
+  if (!['admin', 'staff', 'organizer'].includes(req.user.role)) {
+    userUpdates.role = 'affiliate';
+  }
+  await User.findByIdAndUpdate(req.user._id, userUpdates);
 
   return success(res, 201, 'Affiliate profile created. Awaiting admin approval.', affiliate);
 });

@@ -55,7 +55,10 @@ export class AffiliateOnboardingComponent implements OnInit {
         this.submitted.set(true);
         this.createdCode.set(res.data?.code ?? '');
         const user = this.auth.currentUser();
-        if (user) this.auth.setUser({ ...user, role: 'affiliate' });
+        if (user) {
+          const role = ['admin', 'staff', 'organizer'].includes(user.role) ? user.role : 'affiliate';
+          this.auth.setUser({ ...user, role, affiliate: res.data?._id });
+        }
         this.notify.success('Affiliate application submitted!');
       },
       error: (err) => {

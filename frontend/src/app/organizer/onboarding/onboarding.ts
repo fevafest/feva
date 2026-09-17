@@ -55,7 +55,10 @@ export class OrganizerOnboardingComponent implements OnInit {
         this.submitting.set(false);
         this.submitted.set(true);
         const user = this.auth.currentUser();
-        if (user) this.auth.setUser({ ...user, role: 'organizer' });
+        if (user) {
+          const role = ['admin', 'staff'].includes(user.role) ? user.role : 'organizer';
+          this.auth.setUser({ ...user, role });
+        }
         this.notify.success('Organizer application submitted!');
       },
       error: (err) => {

@@ -24,7 +24,11 @@ const registerOrganizer = asyncHandler(async (req, res) => {
     logo: req.file ? `/uploads/organizers/${req.file.filename}` : undefined,
   });
 
-  await User.findByIdAndUpdate(req.user._id, { role: 'organizer', organizer: organizer._id });
+  const userUpdates = { organizer: organizer._id };
+  if (!['admin', 'staff'].includes(req.user.role)) {
+    userUpdates.role = 'organizer';
+  }
+  await User.findByIdAndUpdate(req.user._id, userUpdates);
 
   return success(res, 201, 'Organizer profile created. Awaiting admin approval.', organizer);
 });
