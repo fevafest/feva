@@ -69,6 +69,11 @@ const initiatePayment = asyncHandler(async (req, res) => {
     payment.rawInitiateResponse = err.response?.data;
     await payment.save();
 
+    order.paymentStatus = 'FAILED';
+    order.orderStatus = 'FAILED';
+    order.failureReason = payheroMessage;
+    await order.save();
+
     if (err.code === 'PAYHERO_NOT_CONFIGURED') {
       throw new ApiError(503, err.message);
     }
@@ -106,8 +111,11 @@ const payheroCallback = asyncHandler(async (req, res) => {
     return res.status(200).json({ received: true });
   }
 
-  // Idempotency guard: ignore duplicate callbacks once already resolved.
-  if (order.paymentStatus === 'PAID' || order.paymentStatus === 'FAILED' || order.paymentStatus === 'CANCELLED') {
+  // Idempotency guard: ignore duplicate callbacks once already resolved. A
+  // late SUCCESS is still honoured even if the payment was previously timed
+  // out as stale, otherwise real money collected by M-Pesa would be dropped.
+  const alreadyFailed = order.paymentStatus === 'FAILED' || order.paymentStatus === 'CANCELLED';
+  if (order.paymentStatus === 'PAID' || (alreadyFailed && !isSuccess)) {
     return res.status(200).json({ received: true, alreadyProcessed: true });
   }
 
@@ -221,8 +229,32 @@ const getPaymentStatus = asyncHandler(async (req, res) => {
   });
 });
 
+// An M-Pesa STK prompt expires within a couple of minutes, so anything still
+// PENDING well past that means no callback ever arrived (ignored prompt, or a
+// callback PayHero couldn't deliver). Resolve those to FAILED so the dashboard
+// never shows a dead transaction as still in flight.
+const PENDING_PAYMENT_TIMEOUT_MINUTES = 10;
+const TIMEOUT_REASON = 'No response from M-Pesa — the payment request timed out.';
+
+async function expireStalePendingPayments() {
+  const cutoff = new Date(Date.now() - PENDING_PAYMENT_TIMEOUT_MINUTES * 60 * 1000);
+  const stale = await Payment.find({ status: 'PENDING', createdAt: { $lt: cutoff } }).select('_id order');
+  if (!stale.length) return;
+
+  await Payment.updateMany(
+    { _id: { $in: stale.map((p) => p._id) } },
+    { status: 'FAILED', resultDescription: TIMEOUT_REASON, processedAt: new Date() }
+  );
+  await Order.updateMany(
+    { _id: { $in: stale.map((p) => p.order) }, paymentStatus: { $in: ['PENDING', 'PAYMENT_PENDING'] } },
+    { paymentStatus: 'FAILED', orderStatus: 'FAILED', failureReason: TIMEOUT_REASON }
+  );
+}
+
 /** Admin: list payment/transaction records for reconciliation. */
 const adminListPayments = asyncHandler(async (req, res) => {
+  await expireStalePendingPayments();
+
   const { status, page = 1, limit = 20 } = req.query;
   const query = {};
   if (status) query.status = status;
@@ -236,7 +268,7 @@ const adminListPayments = asyncHandler(async (req, res) => {
         path: 'order',
         select: 'orderNumber user event total',
         populate: [
-          { path: 'user', select: 'fullName email' },
+          { path: 'user', select: 'fullName email phoneNumber' },
           { path: 'event', select: 'title' },
         ],
       })

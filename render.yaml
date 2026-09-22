@@ -36,8 +36,10 @@ services:
         sync: false
       - key: PAYHERO_CHANNEL_ID
         sync: false
+      # PayHero rejects *.onrender.com callback URLs, so this must point at the
+      # custom domain attached to this service, not the render.com hostname.
       - key: PAYHERO_CALLBACK_URL
-        sync: false # set to https://<this-service>.onrender.com/api/payments/payhero/callback
+        sync: false # set to https://api.fevaafrica.com/api/payments/payhero/callback
       - key: PLATFORM_FEE_PERCENT
         value: 0.05
       - key: PLATFORM_FEE_FIXED

@@ -1,6 +1,11 @@
 <div class="dash-header">
   <h1>Payments</h1>
-  <p>M-Pesa transactions for reconciliation.</p>
+  <p>
+    M-Pesa transactions for reconciliation.
+    <span class="live-note" *ngIf="lastUpdated()">
+      Auto-updating · last checked {{ lastUpdated() | date: 'h:mm:ss a' }}
+    </span>
+  </p>
 </div>
 
 <div class="filter-tabs">
@@ -23,14 +28,16 @@
   <div class="table-row table-head">
     <span>Reference</span>
     <span>Customer</span>
+    <span>Phone</span>
     <span>Event</span>
     <span>Amount</span>
     <span>Status</span>
     <span>Date</span>
   </div>
-  <div class="table-row" *ngFor="let p of payments()">
+  <div class="table-row" *ngFor="let p of payments(); trackBy: trackById">
     <span class="mono">{{ p.reference }}</span>
     <span>{{ p.order.user?.fullName }}</span>
+    <span class="mono">{{ phoneFor(p) }}</span>
     <span>{{ p.order.event?.title }}</span>
     <span>{{ p.amount | kes }}</span>
     <span>
@@ -43,6 +50,9 @@
         }"
         >{{ p.status }}</span
       >
+      <span class="reason" *ngIf="p.status !== 'SUCCESS' && p.resultDescription">{{
+        p.resultDescription
+      }}</span>
     </span>
     <span class="sub">{{ p.createdAt | date: 'd MMM y, h:mm a' }}</span>
   </div>

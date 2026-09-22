@@ -25,7 +25,7 @@ export interface PaymentRecord {
   order: {
     orderNumber: string;
     total: number;
-    user?: { fullName: string; email: string };
+    user?: { fullName: string; email: string; phoneNumber?: string };
     event?: { title: string };
   };
   createdAt: string;
