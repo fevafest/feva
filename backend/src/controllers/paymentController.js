@@ -225,7 +225,9 @@ async function emailTicketsToCustomer(order, tickets) {
 const getPaymentStatus = asyncHandler(async (req, res) => {
   const order = await Order.findOne({ paymentReference: req.params.reference });
   if (!order) throw new ApiError(404, 'Order not found.');
-  if (String(order.user) !== String(req.user._id) && req.user.role !== 'admin') {
+  // Only the buyer or a superadmin may read payment state — a regular admin
+  // has no access to payment information anywhere in the app.
+  if (String(order.user) !== String(req.user._id) && !req.user.isSuperAdmin) {
     throw new ApiError(403, 'You do not have access to this order.');
   }
 
@@ -295,4 +297,29 @@ const adminListPayments = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { initiatePayment, payheroCallback, getPaymentStatus, adminListPayments };
+/**
+ * Superadmin: remove a dead payment record. A SUCCESS record is never
+ * deletable — that row is the only trail of money actually collected.
+ */
+const adminDeletePayment = asyncHandler(async (req, res) => {
+  const payment = await Payment.findById(req.params.id);
+  if (!payment) throw new ApiError(404, 'Payment record not found.');
+
+  if (payment.status === 'SUCCESS') {
+    throw new ApiError(
+      409,
+      'A successful payment cannot be deleted. Its record is the only proof of money collected.'
+    );
+  }
+
+  await payment.deleteOne();
+  return success(res, 200, 'Payment record deleted.', { _id: req.params.id });
+});
+
+module.exports = {
+  initiatePayment,
+  payheroCallback,
+  getPaymentStatus,
+  adminListPayments,
+  adminDeletePayment,
+};

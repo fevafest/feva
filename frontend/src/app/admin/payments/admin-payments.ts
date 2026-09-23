@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Subscription, interval, of } from 'rxjs';
 import { catchError, startWith, switchMap } from 'rxjs/operators';
 import { PaymentService, PaymentRecord } from '../../core/services/payment.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { IconComponent } from '../../shared/components/icon/icon';
 import { KesCurrencyPipe } from '../../shared/pipes/kes-currency.pipe';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state';
@@ -14,7 +16,7 @@ const REFRESH_INTERVAL_MS = 5000;
 @Component({
   selector: 'app-admin-payments',
   standalone: true,
-  imports: [CommonModule, KesCurrencyPipe, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [CommonModule, IconComponent, KesCurrencyPipe, LoadingSpinnerComponent, EmptyStateComponent],
   templateUrl: './admin-payments.html',
   styleUrls: ['../admin-table.scss', './admin-payments.scss'],
 })
@@ -23,10 +25,14 @@ export class AdminPaymentsComponent implements OnInit, OnDestroy {
   readonly payments = signal<PaymentRecord[]>([]);
   readonly filter = signal<PaymentFilter>('all');
   readonly lastUpdated = signal<Date | null>(null);
+  readonly deletingId = signal<string | null>(null);
 
   private pollSub?: Subscription;
 
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(
+    private readonly paymentService: PaymentService,
+    private readonly notify: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.startPolling();
@@ -47,6 +53,23 @@ export class AdminPaymentsComponent implements OnInit, OnDestroy {
 
   phoneFor(payment: PaymentRecord): string {
     return payment.phoneNumber || payment.order?.user?.phoneNumber || '—';
+  }
+
+  remove(payment: PaymentRecord): void {
+    if (!confirm(`Delete payment record ${payment.reference}? This cannot be undone.`)) return;
+
+    this.deletingId.set(payment._id);
+    this.paymentService.adminDelete(payment._id).subscribe({
+      next: () => {
+        this.deletingId.set(null);
+        this.payments.update((rows) => rows.filter((r) => r._id !== payment._id));
+        this.notify.success('Payment record deleted.');
+      },
+      error: (err) => {
+        this.deletingId.set(null);
+        this.notify.error(err.error?.message || 'Could not delete this payment record.');
+      },
+    });
   }
 
   // Re-fetches on a short interval so a payment that PayHero confirms (or

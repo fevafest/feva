@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { LogoComponent } from '../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, IconComponent, LogoComponent],
   templateUrl: './reset-password.html',
   styleUrl: '../auth.scss',
 })

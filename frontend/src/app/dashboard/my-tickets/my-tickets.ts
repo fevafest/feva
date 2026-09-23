@@ -8,11 +8,12 @@ import { FileUrlPipe } from '../../shared/pipes/file-url.pipe';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { LogoComponent } from '../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-my-tickets',
   standalone: true,
-  imports: [CommonModule, RouterLink, KesCurrencyPipe, FileUrlPipe, LoadingSpinnerComponent, EmptyStateComponent, IconComponent],
+  imports: [CommonModule, RouterLink, KesCurrencyPipe, FileUrlPipe, LoadingSpinnerComponent, EmptyStateComponent, IconComponent, LogoComponent],
   templateUrl: './my-tickets.html',
   styleUrl: './my-tickets.scss',
 })

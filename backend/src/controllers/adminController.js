@@ -46,18 +46,22 @@ const dashboardStats = asyncHandler(async (req, res) => {
     return { date: dayKey, revenue: dayTotal };
   });
 
+  // Money figures are superadmin-only. Stripping them server-side means a
+  // regular admin cannot reach them by calling the API directly either.
+  const financials = req.user.isSuperAdmin
+    ? { totalRevenue, revenueByDay, pendingCommissionTotal }
+    : {};
+
   return success(res, 200, 'Dashboard stats fetched.', {
     totalUsers,
     totalEvents,
     publishedEvents,
     ticketsSold,
-    totalRevenue,
     pendingOrders,
     recentOrders,
-    revenueByDay,
-    pendingCommissionTotal,
     pendingCommissionCount: pendingCommissions.length,
     totalAffiliates,
+    ...financials,
   });
 });
 

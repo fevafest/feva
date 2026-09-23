@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AdminService, AdminDashboardStats } from '../../core/services/admin.service';
+import { AuthService } from '../../core/services/auth.service';
 import { KesCurrencyPipe } from '../../shared/pipes/kes-currency.pipe';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner';
 import { IconComponent } from '../../shared/components/icon/icon';
@@ -17,7 +18,10 @@ export class AdminDashboardComponent implements OnInit {
   readonly loading = signal(true);
   readonly stats = signal<AdminDashboardStats | null>(null);
 
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    readonly auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.adminService.dashboardStats().subscribe({

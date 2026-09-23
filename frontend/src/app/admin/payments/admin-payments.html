@@ -33,6 +33,7 @@
     <span>Amount</span>
     <span>Status</span>
     <span>Date</span>
+    <span></span>
   </div>
   <div class="table-row" *ngFor="let p of payments(); trackBy: trackById">
     <span class="mono">{{ p.reference }}</span>
@@ -52,5 +53,18 @@
       >
     </span>
     <span class="sub">{{ p.createdAt | date: 'd MMM y, h:mm a' }}</span>
+    <span class="row-actions">
+      <button
+        type="button"
+        class="delete-btn"
+        *ngIf="p.status !== 'SUCCESS'"
+        [disabled]="deletingId() === p._id"
+        (click)="remove(p)"
+        title="Delete this payment record"
+      >
+        <app-icon name="trash" [size]="15" />
+      </button>
+      <span class="locked" *ngIf="p.status === 'SUCCESS'" title="Successful payments cannot be deleted">—</span>
+    </span>
   </div>
 </div>

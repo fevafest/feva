@@ -44,4 +44,8 @@ export class TicketService {
     if (query.search) params['search'] = query.search;
     return this.http.get<ApiResponse<Ticket[]>>(`${this.baseUrl}/admin`, { params });
   }
+
+  adminDelete(ticketId: string): Observable<ApiResponse<{ ticketId: string }>> {
+    return this.http.delete<ApiResponse<{ ticketId: string }>>(`${this.baseUrl}/${ticketId}`);
+  }
 }

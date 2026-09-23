@@ -2,11 +2,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SettingsService } from '../../../core/services/settings.service';
 import { PublicSettings } from '../../../core/models/settings.model';
+import { LogoComponent } from '../logo/logo';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LogoComponent],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })

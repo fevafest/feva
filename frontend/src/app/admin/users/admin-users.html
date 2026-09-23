@@ -53,3 +53,55 @@
     </span>
   </div>
 </div>
+
+<div class="dash-header tickets-header">
+  <h2>Tickets</h2>
+  <p>Active and used tickets across all attendees. Used tickets can be cleared out.</p>
+</div>
+
+<div class="filter-tabs">
+  <button [class.active]="ticketTab() === 'VALID'" (click)="setTicketTab('VALID')">Active</button>
+  <button [class.active]="ticketTab() === 'USED'" (click)="setTicketTab('USED')">Used</button>
+</div>
+
+<app-loading-spinner *ngIf="ticketsLoading()" />
+
+<app-empty-state
+  *ngIf="!ticketsLoading() && tickets().length === 0"
+  [title]="ticketTab() === 'VALID' ? 'No active tickets' : 'No used tickets'"
+  message="Tickets appear here once customers complete a purchase."
+/>
+
+<div class="table-card card ticket-table" *ngIf="!ticketsLoading() && tickets().length">
+  <div class="table-row table-head">
+    <span>Ticket ID</span>
+    <span>Holder</span>
+    <span>Event</span>
+    <span>Type</span>
+    <span>Status</span>
+    <span>{{ ticketTab() === 'USED' ? 'Used' : 'Issued' }}</span>
+    <span></span>
+  </div>
+  <div class="table-row" *ngFor="let t of tickets()">
+    <span class="mono">{{ t.ticketId }}</span>
+    <span>{{ holderName(t) }}</span>
+    <span>{{ t.event?.title }}</span>
+    <span class="sub">{{ t.ticketTypeName }}</span>
+    <span>
+      <span class="badge" [ngClass]="t.status === 'VALID' ? 'badge-green' : 'badge-gray'">{{ t.status }}</span>
+    </span>
+    <span class="sub">{{ (t.status === 'USED' ? t.usedAt : t.createdAt) | date: 'd MMM y, h:mm a' }}</span>
+    <span class="row-actions">
+      <button
+        type="button"
+        class="delete-btn"
+        *ngIf="t.status === 'USED'"
+        [disabled]="deletingTicketId() === t.ticketId"
+        (click)="deleteTicket(t)"
+        title="Delete this used ticket"
+      >
+        <app-icon name="trash" [size]="15" />
+      </button>
+    </span>
+  </div>
+</div>

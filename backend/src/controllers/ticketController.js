@@ -1,4 +1,5 @@
 const Ticket = require('../models/Ticket');
+const Order = require('../models/Order');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError, success } = require('../utils/apiResponse');
 const { verifyQrPayload } = require('../services/qrService');
@@ -139,4 +140,29 @@ const adminListTickets = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { myTickets, getTicketById, verifyTicket, markTicketUsed, adminListTickets };
+/**
+ * Admin: delete a spent ticket. Only a USED ticket can be removed — deleting
+ * a VALID one would silently revoke admission the holder has paid for.
+ */
+const adminDeleteTicket = asyncHandler(async (req, res) => {
+  const ticket = await Ticket.findOne({ ticketId: req.params.ticketId });
+  if (!ticket) throw new ApiError(404, 'Ticket not found.');
+
+  if (ticket.status !== 'USED') {
+    throw new ApiError(409, 'Only tickets that have already been used can be deleted.');
+  }
+
+  await ticket.deleteOne();
+  await Order.updateOne({ _id: ticket.order }, { $pull: { tickets: ticket._id } });
+
+  return success(res, 200, 'Ticket deleted.', { ticketId: req.params.ticketId });
+});
+
+module.exports = {
+  myTickets,
+  getTicketById,
+  verifyTicket,
+  markTicketUsed,
+  adminListTickets,
+  adminDeleteTicket,
+};

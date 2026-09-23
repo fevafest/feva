@@ -1,14 +1,16 @@
-// Payments carries two more columns (Phone, actions) than the shared table.
-.table-row {
-  grid-template-columns: 1.1fr 1.2fr 1.1fr 1.3fr 0.9fr 1fr 1.1fr 44px;
-  min-width: 940px;
+.tickets-header {
+  margin-top: 40px;
+
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
 }
 
-.live-note {
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 0.78rem;
-  color: var(--color-gray);
+// The ticket table carries a trailing action column the user table does not.
+.ticket-table .table-row {
+  grid-template-columns: 1.4fr 1.2fr 1.4fr 0.9fr 0.8fr 1.2fr 44px;
+  min-width: 900px;
 }
 
 .row-actions {
@@ -35,9 +37,4 @@
     opacity: 0.4;
     cursor: not-allowed;
   }
-}
-
-.locked {
-  color: var(--color-border);
-  font-size: 0.8rem;
 }

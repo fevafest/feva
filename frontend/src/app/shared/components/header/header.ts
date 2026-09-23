@@ -4,11 +4,12 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { EventService } from '../../../core/services/event.service';
 import { FevaEvent } from '../../../core/models/event.model';
+import { LogoComponent } from '../logo/logo';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, LogoComponent],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

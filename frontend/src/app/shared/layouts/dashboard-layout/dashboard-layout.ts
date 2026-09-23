@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastContainerComponent } from '../../components/toast-container/toast-container';
 import { IconComponent, IconName } from '../../components/icon/icon';
+import { LogoComponent } from '../../components/logo/logo';
 
 export interface DashboardNavItem {
   label: string;
@@ -17,7 +18,15 @@ export interface DashboardNavItem {
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, ToastContainerComponent, IconComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    ToastContainerComponent,
+    IconComponent,
+    LogoComponent,
+  ],
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.scss',
 })

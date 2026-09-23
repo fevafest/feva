@@ -41,7 +41,7 @@
         <div class="stat-label">Tickets Sold</div>
       </div>
     </div>
-    <div class="stat-card card">
+    <div class="stat-card card" *ngIf="auth.isSuperAdmin()">
       <div class="stat-icon"><app-icon name="wallet" [size]="20" /></div>
       <div>
         <div class="stat-value">{{ s.totalRevenue | kes }}</div>
@@ -62,7 +62,7 @@
         <div class="stat-label">Affiliates & Promoters</div>
       </div>
     </a>
-    <a routerLink="/admin/payouts" class="stat-card card stat-link">
+    <a routerLink="/admin/payouts" class="stat-card card stat-link" *ngIf="auth.isSuperAdmin()">
       <div class="stat-icon purple"><app-icon name="wallet" [size]="20" /></div>
       <div>
         <div class="stat-value">{{ (s.pendingCommissionTotal || 0) | kes }}</div>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="content-grid">
-    <div class="card chart-card">
+    <div class="card chart-card" *ngIf="auth.isSuperAdmin()">
       <h3>Revenue (Last 7 Days)</h3>
       <div class="bar-chart">
         <div class="bar-col" *ngFor="let d of s.revenueByDay">

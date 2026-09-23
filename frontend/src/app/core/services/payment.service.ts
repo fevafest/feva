@@ -54,4 +54,8 @@ export class PaymentService {
     if (status) params['status'] = status;
     return this.http.get<ApiResponse<PaymentRecord[]>>(`${this.baseUrl}/admin`, { params });
   }
+
+  adminDelete(id: string): Observable<ApiResponse<{ _id: string }>> {
+    return this.http.delete<ApiResponse<{ _id: string }>>(`${this.baseUrl}/admin/${id}`);
+  }
 }

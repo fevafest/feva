@@ -132,7 +132,21 @@ const adminUpdateUserStatus = asyncHandler(async (req, res) => {
     user.role = role;
   }
 
-  if (typeof isActive === 'boolean') user.isActive = isActive;
+  if (typeof isActive === 'boolean') {
+    // Without this a regular admin could deactivate a superadmin — or their
+    // own account — and lock the owner out of the platform.
+    if (user.role === 'admin' && !isRequesterSuperAdmin(req)) {
+      throw new ApiError(403, 'Only superadmins can change an admin account\'s status.');
+    }
+    if (String(user._id) === String(req.user._id)) {
+      throw new ApiError(400, 'You cannot deactivate your own account.');
+    }
+    if (user.isSuperAdmin && !isActive) {
+      throw new ApiError(403, 'A superadmin account cannot be deactivated.');
+    }
+    user.isActive = isActive;
+  }
+
   await user.save();
 
   return success(res, 200, 'User updated.', hideSuperAdminFlag(user, req));

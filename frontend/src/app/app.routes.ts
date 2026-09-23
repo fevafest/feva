@@ -35,7 +35,7 @@ const adminNav: DashboardNavItem[] = [
   { label: 'Affiliates', path: '/admin/affiliates', icon: 'megaphone' },
   { label: 'Payments', path: '/admin/payments', icon: 'credit-card', superAdminOnly: true },
   { label: 'Payouts', path: '/admin/payouts', icon: 'wallet' },
-  { label: 'Reports', path: '/admin/reports', icon: 'chart' },
+  { label: 'Reports', path: '/admin/reports', icon: 'chart', superAdminOnly: true },
   { label: 'Admins', path: '/admin/admins', icon: 'shield', superAdminOnly: true },
   { label: 'Settings', path: '/admin/settings', icon: 'settings' },
 ];
@@ -223,6 +223,7 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
+        canActivate: [superAdminGuard],
         loadComponent: () => import('./admin/reports/admin-reports').then((m) => m.AdminReportsComponent),
       },
       {
