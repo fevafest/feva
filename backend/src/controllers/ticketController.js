@@ -25,11 +25,15 @@ const getTicketById = asyncHandler(async (req, res) => {
 });
 
 /**
- * Staff/Admin: scan a ticket QR code (payload string) and report validity
- * without mutating status. Marking a ticket USED is a separate action.
+ * Staff/Admin: scan a ticket QR code (payload string) and report validity.
+ *
+ * A manual ticket-ID lookup never mutates status, so staff can inspect a
+ * ticket without burning it. A camera scan passes `consume`, which checks the
+ * ticket in atomically — the same QR presented twice can never both come back
+ * valid, even if two doors scan it at the same moment.
  */
 const verifyTicket = asyncHandler(async (req, res) => {
-  const { qrData, ticketId } = req.body;
+  const { qrData, ticketId, consume } = req.body;
 
   let ticket;
   if (ticketId) {
@@ -63,6 +67,21 @@ const verifyTicket = asyncHandler(async (req, res) => {
 
   if (ticket.status === 'CANCELLED') {
     return success(res, 200, 'Ticket cancelled.', { valid: false, reason: 'CANCELLED', ticket });
+  }
+
+  if (consume) {
+    const claimed = await Ticket.findOneAndUpdate(
+      { _id: ticket._id, status: 'VALID' },
+      { status: 'USED', usedAt: new Date(), scannedBy: req.user._id },
+      { new: true }
+    );
+    // Losing the race means another scanner admitted this ticket first.
+    if (!claimed) {
+      return success(res, 200, 'Ticket already used.', { valid: false, reason: 'ALREADY_USED', ticket });
+    }
+    ticket.status = claimed.status;
+    ticket.usedAt = claimed.usedAt;
+    return success(res, 200, 'Ticket valid. Checked in.', { valid: true, checkedIn: true, ticket });
   }
 
   return success(res, 200, 'Ticket valid.', { valid: true, ticket });

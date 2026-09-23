@@ -8,6 +8,7 @@ import { Ticket } from '../models/ticket.model';
 export interface VerifyResult {
   valid: boolean;
   reason?: string;
+  checkedIn?: boolean;
   ticket?: Ticket;
 }
 
@@ -25,7 +26,11 @@ export class TicketService {
     return this.http.get<ApiResponse<Ticket>>(`${this.baseUrl}/${ticketId}`);
   }
 
-  verify(payload: { ticketId?: string; qrData?: string }): Observable<ApiResponse<VerifyResult>> {
+  verify(payload: {
+    ticketId?: string;
+    qrData?: string;
+    consume?: boolean;
+  }): Observable<ApiResponse<VerifyResult>> {
     return this.http.post<ApiResponse<VerifyResult>>(`${this.baseUrl}/verify`, payload);
   }
 

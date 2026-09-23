@@ -44,7 +44,8 @@
   <div class="card result-card" *ngIf="!checkingResult() && result() as r">
     <div class="result-status" [ngClass]="{ valid: r.valid, invalid: !r.valid }">
       <app-icon [name]="r.valid ? 'check-circle' : 'x-circle'" [size]="30" />
-      <h3 *ngIf="r.valid">Ticket Valid</h3>
+      <h3 *ngIf="r.valid && r.checkedIn">Checked In</h3>
+      <h3 *ngIf="r.valid && !r.checkedIn">Ticket Valid</h3>
       <h3 *ngIf="!r.valid && r.reason === 'ALREADY_USED'">Ticket Already Used</h3>
       <h3 *ngIf="!r.valid && r.reason === 'NOT_FOUND'">Invalid Ticket</h3>
       <h3 *ngIf="!r.valid && r.reason === 'INVALID_SIGNATURE'">Invalid Ticket</h3>
@@ -74,7 +75,12 @@
       </div>
     </div>
 
-    <button class="btn btn-primary btn-block" *ngIf="r.valid" [disabled]="markingUsed()" (click)="markUsed()">
+    <button
+      class="btn btn-primary btn-block"
+      *ngIf="r.valid && !r.checkedIn"
+      [disabled]="markingUsed()"
+      (click)="markUsed()"
+    >
       {{ markingUsed() ? 'Marking...' : 'Mark as Used' }}
     </button>
     <button class="btn btn-outline btn-block" (click)="reset()">Scan Next Ticket</button>

@@ -10,6 +10,7 @@ export interface PaymentStatusResponse {
   paymentStatus: PaymentStatus;
   orderStatus: OrderStatus;
   total: number;
+  failureReason?: string;
 }
 
 export interface PaymentRecord {

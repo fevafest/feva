@@ -31,6 +31,18 @@ const initiatePayment = asyncHandler(async (req, res) => {
     throw new ApiError(409, 'A payment request is already pending for this order.');
   }
 
+  // The STK push is fired in parallel with writing the Payment row so the
+  // prompt reaches the customer's phone a round trip sooner. The row still
+  // lands well before any callback could reference it.
+  const pushPromise = payheroService
+    .initiateStkPush({
+      amount: order.total,
+      phoneNumber: order.phoneNumber,
+      reference: order.paymentReference,
+      customerName: req.user.fullName,
+    })
+    .catch((err) => ({ __error: err }));
+
   const payment = await Payment.create({
     order: order._id,
     reference: order.paymentReference,
@@ -40,12 +52,8 @@ const initiatePayment = asyncHandler(async (req, res) => {
   });
 
   try {
-    const payheroResponse = await payheroService.initiateStkPush({
-      amount: order.total,
-      phoneNumber: order.phoneNumber,
-      reference: order.paymentReference,
-      customerName: req.user.fullName,
-    });
+    const payheroResponse = await pushPromise;
+    if (payheroResponse?.__error) throw payheroResponse.__error;
 
     payment.rawInitiateResponse = payheroResponse;
     payment.payheroCheckoutRequestId = payheroResponse?.CheckoutRequestID || undefined;
@@ -226,6 +234,7 @@ const getPaymentStatus = asyncHandler(async (req, res) => {
     paymentStatus: order.paymentStatus,
     orderStatus: order.orderStatus,
     total: order.total,
+    failureReason: order.failureReason,
   });
 });
 

@@ -61,7 +61,7 @@ async function sendTicketEmail({ to, fullName, event, tickets, orderNumber }) {
           <p style="margin:0 0 4px;font-weight:700;color:#14141a;">${ticket.ticketTypeName}</p>
           <p style="margin:0;font-family:monospace;font-size:13px;color:#6b7280;">${ticket.ticketId}</p>
           <div style="margin-top:12px;">
-            <img src="cid:qr-${index}" alt="Ticket QR code" width="160" height="160" style="display:block;border-radius:6px;border:1px solid #e5e7eb;" />
+            <img src="cid:qr-${index}" alt="Ticket QR code" width="260" height="260" style="display:block;border-radius:6px;border:1px solid #e5e7eb;" />
           </div>
         </td>
       </tr>

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
+import { Subscription, switchMap, takeWhile, timer } from 'rxjs';
 import { CheckoutStateService, CheckoutSelection } from '../../core/services/checkout-state.service';
 import { OrderService } from '../../core/services/order.service';
 import { PaymentService } from '../../core/services/payment.service';
@@ -108,7 +108,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   private startPolling(reference: string): void {
-    this.pollSub = interval(3500)
+    // First check early, then every 2s, so the outcome lands promptly once
+    // the customer finishes with the M-Pesa prompt.
+    this.pollSub = timer(1500, 2000)
       .pipe(
         switchMap(() => this.paymentService.getStatus(reference)),
         takeWhile((res) => {
@@ -124,7 +126,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.router.navigate(['/orders', reference, 'success']);
           } else if (status === 'FAILED' || status === 'CANCELLED') {
             this.step.set('failed');
-            this.failureReason.set('Your M-Pesa payment was not completed or was cancelled.');
+            this.failureReason.set(
+              res.data?.failureReason || 'Your M-Pesa payment was not completed or was cancelled.'
+            );
           }
         },
         error: () => {

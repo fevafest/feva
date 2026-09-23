@@ -62,10 +62,12 @@ export class ScannerComponent implements AfterViewInit, OnDestroy {
     this.scanning.set(false);
   }
 
+  // A camera scan admits the holder in one step, so the same QR can never be
+  // scanned through the door twice. Manual lookup stays read-only.
   private handleScan(qrData: string): void {
     if (this.locked) return;
     this.locked = true;
-    this.verify({ qrData });
+    this.verify({ qrData, consume: true });
   }
 
   lookupManual(): void {
@@ -74,7 +76,7 @@ export class ScannerComponent implements AfterViewInit, OnDestroy {
     this.verify({ ticketId });
   }
 
-  private verify(payload: { qrData?: string; ticketId?: string }): void {
+  private verify(payload: { qrData?: string; ticketId?: string; consume?: boolean }): void {
     this.checkingResult.set(true);
     this.ticketService.verify(payload).subscribe({
       next: (res) => {

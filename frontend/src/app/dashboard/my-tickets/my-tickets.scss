@@ -78,8 +78,8 @@ h4 {
   display: flex;
   justify-content: flex-end;
   img {
-    width: 48px;
-    height: 48px;
+    width: 80px;
+    height: 80px;
     border: 1px solid var(--color-border);
     border-radius: 6px;
   }
@@ -149,9 +149,14 @@ h4 {
 .qr-large {
   margin: 24px 0;
   img {
-    width: 200px;
-    height: 200px;
+    display: block;
+    width: min(300px, 100%);
+    height: auto;
+    aspect-ratio: 1;
     margin: 0 auto;
+    // White padding keeps the QR quiet zone intact so scanners lock on fast.
+    padding: 10px;
+    background: white;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
   }

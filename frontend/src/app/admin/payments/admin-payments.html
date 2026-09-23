@@ -50,9 +50,6 @@
         }"
         >{{ p.status }}</span
       >
-      <span class="reason" *ngIf="p.status !== 'SUCCESS' && p.resultDescription">{{
-        p.resultDescription
-      }}</span>
     </span>
     <span class="sub">{{ p.createdAt | date: 'd MMM y, h:mm a' }}</span>
   </div>

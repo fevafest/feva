@@ -28,8 +28,8 @@ function verifyQrPayload(payloadString) {
 async function generateQrImage(dataString) {
   return QRCode.toDataURL(dataString, {
     errorCorrectionLevel: 'M',
-    margin: 1,
-    width: 320,
+    margin: 2,
+    width: 640,
     color: { dark: '#111111', light: '#ffffff' },
   });
 }
