@@ -11,6 +11,7 @@ import { ScrollRevealDirective } from '../shared/directives/scroll-reveal.direct
 import { SkylineSilhouetteComponent } from '../shared/components/skyline-silhouette/skyline-silhouette';
 import { CrowdSilhouetteComponent } from '../shared/components/crowd-silhouette/crowd-silhouette';
 import { FileUrlPipe } from '../shared/pipes/file-url.pipe';
+import { LogoComponent } from '../shared/components/logo/logo';
 
 type SearchTab = 'events' | 'flights' | 'holidays';
 
@@ -28,6 +29,7 @@ type SearchTab = 'events' | 'flights' | 'holidays';
     SkylineSilhouetteComponent,
     CrowdSilhouetteComponent,
     FileUrlPipe,
+    LogoComponent,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
