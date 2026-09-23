@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
       [attr.aria-label]="label"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
     >
       <defs>
         <path id="fevaArc" d="M 14 94 Q 160 50 306 94" fill="none" />
@@ -26,11 +27,11 @@ import { CommonModule } from '@angular/common';
       </defs>
 
       <text class="feva-word" text-anchor="middle">
-        <textPath href="#fevaArc" startOffset="50%">FEVA</textPath>
+        <textPath href="#fevaArc" xlink:href="#fevaArc" startOffset="50%">FEVA</textPath>
       </text>
 
       <text class="feva-sub" text-anchor="middle">
-        <textPath href="#ticketsArc" startOffset="50%">TICKETS.EA</textPath>
+        <textPath href="#ticketsArc" xlink:href="#ticketsArc" startOffset="50%">TICKETS.EA</textPath>
       </text>
     </svg>
   `,

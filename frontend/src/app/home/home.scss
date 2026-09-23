@@ -110,6 +110,13 @@
 .hero-wordmark .poster-type + .poster-type {
   margin-top: -0.08em;
 }
+// TICKETS.EA is far longer than FEVA, so it sits smaller and wider-tracked
+// beneath it rather than matching the headline size and overflowing.
+.poster-type.sub {
+  font-size: clamp(1.5rem, 4.6vw, 3.1rem);
+  letter-spacing: 0.06em;
+  -webkit-text-stroke-width: 1.5px;
+}
 
 .hero-tagline {
   color: var(--color-cream);
